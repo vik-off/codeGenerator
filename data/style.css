@@ -1,0 +1,93 @@
+html,body,table{
+	font-family: tahoma;
+	font-size: 14px;
+}
+
+table{
+	border-collapse: collapse;
+	width: inherit;
+}
+th{
+	padding: 5px;
+	text-align: center;
+}
+td{
+	padding: 5px;
+}
+ul{
+	margin: 0px;
+	padding: 0px;
+}
+li{
+	list-style: none none inside;
+}
+img{
+	border: none 0px black;
+}
+a{	
+	color: blue;
+	text-decoration: none;
+}
+a:hover{
+	text-decoration: underline;
+}
+.red{
+	color: red;
+}
+.green{
+	color: green;
+}
+.grey{
+	color: #999999;
+}
+.normal{
+	font-weight: normal;
+	text-decoration: none;
+	font-size: 13px;
+}
+
+/* #### ИНФОРМАЦИОННЫЕ СООБЩЕНИЯ #### */
+
+.userMessageSuccess{
+	border: solid 2px #00cc00;
+	background-color: #eeffee;
+	padding: 10px;
+	margin: 5px;
+}
+.userMessageInfo{
+	border: solid 2px #0000cc;
+	background-color: #eeeeff;
+	padding: 10px;
+	margin: 5px 0px 10px;
+}
+.userMessageError{
+	border: solid 2px #cc0000;
+	background-color: #ffeeee;
+	padding: 10px;
+	margin: 5px;
+}
+a.userMessageOkBtn{
+	background-color: #EEE;
+	border: outset 1px #AAA;
+	padding: 5px 7px;
+	color: #000;
+}
+a.userMessageOkBtn:hover{
+	background-color: #E0E0E0;
+	text-decoration: none;
+}
+a.userMessageOkBtn:active{
+	border: inset 1px #AAA;
+}
+
+textarea{
+	font-family: monospace;
+	padding: 5px;
+	font-size: 12px;
+}
+
+table.fields-list{
+}
+table.fields-list td{
+	text-align: center;
+}
