@@ -8,8 +8,7 @@ $messenger = Messenger::get();
 if($action == 'saveData'){
 	
 	if(get_magic_quotes_gpc() || get_magic_quotes_runtime())
-		foreach($_POST as &$p)
-			$p = stripslashes($p);
+		$_POST = array_stripslashes($_POST);
 	
 	// echo '<pre>'; print_r($_POST); die;
 	$s['template'] = trim($_POST['template']);
@@ -48,6 +47,11 @@ elseif($action == 'generate'){
 	
 	Storage::get(GEN_TYPE)->save();
 	
+	$classFile = FS_ROOT.'templates/'.$s['template'].'/classes/CodeGenerator.php';
+	if(!file_exists($classFile))
+		trigger_error('Класс кодогенерации не найден ['.$classFile.']', E_USER_ERROR);
+	
+	require($classFile);
 	$generator = new CodeGenerator(getVar($s['template']), $s['clear-output-dir']);
 	
 	$successMsg = '';

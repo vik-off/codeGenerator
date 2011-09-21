@@ -26,7 +26,16 @@ function reload(){
 	exit();
 }
 
-require_once('data/CodeGenerator.class.php');
+function array_stripslashes($arr){
+	foreach($arr as &$v)
+		$v = is_scalar($v) ? stripslashes($v) : array_stripslashes($v);
+	return $arr;
+}
+
+define('TYPE_DIV', 'div');
+define('TYPE_TABLE', 'table');
+
+require_once('data/CodeGeneratorParent.class.php');
 require_once('data/DbStuctParser.class.php');
 require_once('data/Messenger.class.php');
 require_once('data/Storage.class.php');
