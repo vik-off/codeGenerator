@@ -1,18 +1,24 @@
-{$pagination}
 
-{if $collection}
-	{foreach from=$collection item='item'}
+<?= '<?= $this->pagination; ?>'; ?>
+
+
+<?= '<? if($this->collection): ?>'; ?>
+
+	<?= '<? foreach($this->collection as $item): ?>' ?>
+	
 	<p>
 <? foreach($FIELDS_TITLES as $field => $title)
 	if(!empty($ALLOWED_FIELDS[$field]))
 		echo "\t\t".'<h3>'.$title.'</h3>'."\r\n"
-			."\t\t".'{$item.'.$field.'}'."\r\n"; ?>
-		<div>{a href=<?=$MODEL_NAME_LOW;?>/view/`$item.id` text="Подробней"}</div>
+			."\t\t<?= \$item['$field']; ?>\r\n"; ?>
+		<div><a href="<?= "<?= href('$MODEL_NAME_LOW/view/'.\$item['id']); ?>"; ?>">Подробней</a></div>
 	</p>
-	{/foreach}
-{else}
-	<p>Сохраненных записей пока нет.</p>
-{/if}
+	<?= '<? endforeach; ?>'; ?>
+	
+<?= '<? else: ?>'; ?>
 
-{$pagination}
+	<p>Сохраненных записей пока нет.</p>
+<?= '<? endif; ?>'; ?>
+
+<?= '<?= $this->pagination; ?>'; ?>
 

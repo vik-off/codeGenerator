@@ -1,17 +1,17 @@
 
-<div>{a href=jack-item/list text="Вернуться к списку"}</div>
+<div><a href="<?= href('jack-item/list'); ?> ">Вернуться к списку</a></div>
 
-<h2>Запись #{$instanceId}</h2>
+<h2>Запись #<?= $this->instanceId; ?></h2>
 
-<p>
+<div class="paragraph">
 	<h3>id</h3>
-	{$id}
-</p>
-<p>
+	<?= $this->id; ?>
+</div>
+<div class="paragraph">
 	<h3>index</h3>
-	{$index}
-</p>
-<p>
+	<?= $this->index; ?>
+</div>
+<div class="paragraph">
 	<h3>Заголовок</h3>
-	{$title}
-</p>
+	<?= $this->title; ?>
+</div>

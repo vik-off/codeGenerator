@@ -30,45 +30,48 @@ class CodeGenerator extends CodeGeneratorCommon{
 	}
 	
 	// ГЕНЕРАЦИЯ ШАБЛОНА ADMIN-LIST
-	public function generateTplAdminList($modelName, $fieldtitles, $sortableFields, $allowedFields){
+	public function generateTplAdminList($modelName, $fieldtitles, $sortableFields, $allowedFields, $admSection){
 		
 		$content = $this->parseHtmlTemplate('templates/'.$this->_template.'/templates/admin_list.php', array(
-			'MODEL_NAME_LOW' => $this->getModelUrlPart($modelName),
-			'FIELDS_TITLES' => $fieldtitles,
+			'MODEL_NAME_LOW'  => $this->getModelUrlPart($modelName),
+			'FIELDS_TITLES'   => $fieldtitles,
 			'SORTABLE_FIELDS' => $sortableFields,
-			'ALLOWED_FIELDS' => $allowedFields,
+			'ALLOWED_FIELDS'  => $allowedFields,
+			'ADMIN_SECTION'   => $admSection,
 		));
 		$this->createFile('output/templates/'.$modelName.'/', 'admin_list.php', $content);
 	}
 	
 	// ГЕНЕРАЦИЯ ШАБЛОНА LIST
-	public function generateTplList($modelName, $fieldtitles, $type = TYPE_TABLE, $allowedFields){
+	public function generateTplList($modelName, $fieldtitles, $type = TYPE_TABLE, $allowedFields, $admSection){
 		
 		$tpl = $type == TYPE_TABLE ? 'list_table.php' : 'list_div.php';
 		
 		$content = $this->parseHtmlTemplate('templates/'.$this->_template.'/templates/'.$tpl, array(
-			'MODEL_NAME_LOW' => $this->getModelUrlPart($modelName),
-			'FIELDS_TITLES' => $fieldtitles,
-			'ALLOWED_FIELDS' => $allowedFields,
+			'MODEL_NAME_LOW'  => $this->getModelUrlPart($modelName),
+			'FIELDS_TITLES'   => $fieldtitles,
+			'ALLOWED_FIELDS'  => $allowedFields,
+			'ADMIN_SECTION'   => $admSection,
 		));
 		$this->createFile('output/templates/'.$modelName.'/', 'list.php', $content);
 	}
 	
 	// ГЕНЕРАЦИЯ ШАБЛОНА VIEW
-	public function generateTplView($modelName, $fieldtitles, $type = TYPE_TABLE, $allowedFields){
+	public function generateTplView($modelName, $fieldtitles, $type = TYPE_TABLE, $allowedFields, $admSection){
 	
 		$tpl = $type == TYPE_TABLE ? 'view_table.php' : 'view_div.php';
 		
 		$content = $this->parseHtmlTemplate('templates/'.$this->_template.'/templates/'.$tpl, array(
-			'MODEL_NAME_LOW' => $this->getModelUrlPart($modelName),
-			'FIELDS_TITLES' => $fieldtitles,
-			'ALLOWED_FIELDS' => $allowedFields,
+			'MODEL_NAME_LOW'  => $this->getModelUrlPart($modelName),
+			'FIELDS_TITLES'   => $fieldtitles,
+			'ALLOWED_FIELDS'  => $allowedFields,
+			'ADMIN_SECTION'   => $admSection,
 		));
 		$this->createFile('output/templates/'.$modelName.'/', 'view.php', $content);
 	}
 	
 	// ГЕНЕРАЦИЯ ШАБЛОНА EDIT
-	public function generateTplEdit($modelName, $fieldtitles, $type = TYPE_TABLE, $allowedFields, $inputTypes){
+	public function generateTplEdit($modelName, $fieldtitles, $type = TYPE_TABLE, $allowedFields, $inputTypes, $admSection){
 	
 		$tpl = $type == TYPE_TABLE ? 'edit_table.php' : 'edit_div.php';
 		
@@ -77,20 +80,23 @@ class CodeGenerator extends CodeGeneratorCommon{
 			'FIELDS_TITLES' => $fieldtitles,
 			'ALLOWED_FIELDS' => $allowedFields,
 			'INPUT_TYPES' => $inputTypes,
+			'ADMIN_SECTION'   => $admSection,
 		));
 		$this->createFile('output/templates/'.$modelName.'/', 'edit.php', $content);
 	}
 	
 	// ГЕНЕРАЦИЯ ШАБЛОНА DELETE
-	public function generateTplDelete($modelName, $fieldtitles){
+	public function generateTplDelete($modelName, $fieldtitles, $admSection){
 		
 		$content = $this->parseHtmlTemplate('templates/'.$this->_template.'/templates/delete.php', array(
 			'MODEL_NAME_LOW' => $this->getModelUrlPart($modelName),
 			'FIELDS_TITLES' => $fieldtitles,
+			'ADMIN_SECTION'   => $admSection,
 		));
 		$this->createFile('output/templates/'.$modelName.'/', 'delete.php', $content);
 	}
 	
+	/** ПОЛУЧИТЬ HTML-INPUT УКАЗАННОГО ТИПА */
 	public function getEditTplInput($type, $name){
 		
 		$value = '$this->'.$name;

@@ -17,6 +17,8 @@ if($action == 'saveData'){
 	$s['modelclass'] 	= trim($_POST['modelclass']);
 	$s['controlclass'] 	= trim($_POST['controlclass']);
 	
+	$s['admSection']    = trim($_POST['admSection']);
+	
 	$s['strValidatCommonRules']  = trim($_POST['validatCommonRules']);
 	$s['strValidatIndividRules'] = trim($_POST['validatIndividRules']);
 	
@@ -97,8 +99,9 @@ elseif($action == 'generate'){
 				$s['modelclass'],
 				$s['fieldsTitles'],
 				$s['sortableFields'],
-				$s['tplFields']['admin-list']
-			);
+				$s['tplFields']['admin-list'],
+				$s['admSection']
+ 			);
 			$successMsg .= '<p>Файл Шаблона admin-list сохранен!</p>';
 		}
 
@@ -109,7 +112,8 @@ elseif($action == 'generate'){
 				$s['modelclass'],
 				$s['fieldsTitles'],
 				$s['files']['tpl-list'],
-				$s['tplFields']['list']
+				$s['tplFields']['list'],
+				$s['admSection']
 			);
 			$successMsg .= '<p>Файл Шаблона list сохранен!</p>';
 		}
@@ -121,7 +125,8 @@ elseif($action == 'generate'){
 				$s['modelclass'],
 				$s['fieldsTitles'],
 				$s['files']['tpl-view'],
-				$s['tplFields']['view']
+				$s['tplFields']['view'],
+				$s['admSection']
 			);
 			$successMsg .= '<p>Файл Шаблона view сохранен!</p>';
 		}
@@ -134,7 +139,8 @@ elseif($action == 'generate'){
 				$s['fieldsTitles'],
 				$s['files']['tpl-edit'],
 				$s['tplFields']['edit'],
-				$s['inputTypes']
+				$s['inputTypes'],
+				$s['admSection']
 			);
 			$successMsg .= '<p>Файл Шаблона edit сохранен!</p>';
 		}
@@ -144,7 +150,8 @@ elseif($action == 'generate'){
 
 			$generator->generateTplDelete(
 				$s['modelclass'],
-				$s['fieldsTitles']
+				$s['fieldsTitles'],
+				$s['admSection']
 			);
 			$successMsg .= '<p>Файл Шаблона delete сохранен!</p>';
 		}

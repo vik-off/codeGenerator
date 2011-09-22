@@ -3,11 +3,11 @@
 
 	<div class="paragraph">
 
-		Хотите удалить запись #{$instanceId}
+		Хотите удалить запись #<?= $this->instanceId; ?>		
 
-		id: {$id}, 
-		index: {$index}, 
-		Заголовок: {$title}, 
+		id: <?= $this->id; ?>, 
+		index: <?= $this->index; ?>, 
+		Заголовок: <?= $this->title; ?>, 
 		
 		безвозвратно?
 
@@ -15,11 +15,10 @@
 	
 	<div class="paragraph">
 		<form action="" method="post">
-			<input type="hidden" name="id" value="{$instanceId}" />
-			{$formcode}
-			
+			<input type="hidden" name="id" value="<?= $this->instanceId; ?>" />
+			<?= FORMCODE; ?>			
 			<input class="button" type="submit" name="action[jack-item/delete]" value="Удалить" />
-			<a class="button" href="{a href=admin/content/jack-item/list}">Отмена</a>
+			<a class="button" href="<?= href('admin/content/jack-item'); ?>">Отмена</a>
 		</form>
 	</div>
 	
