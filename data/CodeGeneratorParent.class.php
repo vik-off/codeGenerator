@@ -100,6 +100,18 @@ class CodeGeneratorCommon{
 		return strtolower(preg_replace('/([^\s])([A-Z])/', '\1-\2', $model));
 	}
 	
+	public function getEditTplInput($type, $name){
+		switch($type){
+			case 'input-text': 		return '<input type="text" name="'.$name.'" value="{$'.$name.'}" />';
+			case 'input-password': 	return '<input type="password" name="'.$name.'" value="{$'.$name.'}" />';
+			case 'checkbox': 		return '<input type="checkbox" name="'.$name.'" value="1" {if $'.$name.'}checked="checked"{/if} />';
+			case 'textarea': 		return '<textarea name="'.$name.'">{$'.$name.'}</textarea>';
+			case 'wysiwyg': 		return '<textarea class="wysiwyg" name="'.$name.'">{$'.$name.'}</textarea>';
+			case 'select': 			return '<select name="'.$name.'"><option value="">Выберите...</option></select>';
+			default: trigger_error('Неизвестный тип поля ввода <b>'.$type.'</b>', E_USER_ERROR);
+		}
+	}
+	
 }
 
 ?>

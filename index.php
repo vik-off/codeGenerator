@@ -14,6 +14,9 @@ require_once('setup.php');
 	<title>Кодогенератор</title>
 	
 	<link rel="stylesheet" href="data/style.css" type="text/css" />
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+	<script type="text/javascript" src="http://scripts.vik-off.net/debug.js"></script>
+	<script type="text/javascript" src="http://scripts.vik-off.net/plugins/jquery.simpleCheckbox.js"></script>
 </head>
 <body>
 
@@ -46,6 +49,10 @@ require('data/actions.php');
 		}
 		
 	}
+	
+	$(function(){
+		$('input[type="checkbox"].pretty').simpleCheckbox();
+	});
 	
 </script>
 
@@ -88,6 +95,9 @@ require('data/actions.php');
 		<td>Класс контроллера</td>
 		<td><input id="controlclass" type="text" name="controlclass" value="<?=getVar($s['controlclass']);?>"></td>
 	</tr><tr>
+		<td>Раздел адм. панели</td>
+		<td><input type="text" name="admSection" value="<?=getVar($s['admSection'], 'content');?>"></td>
+	</tr><tr>
 		<td>Поля</td>
 		<td>
 			<? if(!empty($s['tableStruct'])): ?>
@@ -111,11 +121,11 @@ require('data/actions.php');
 					<tr>
 						<td><?=$f;?></td>
 						<td><input type="text" name="fieldsTitles[<?=$f;?>]" value="<?=isset($s['fieldsTitles'][$f]) ? $s['fieldsTitles'][$f] : $f;?>" /></td>
-						<td><?=Inp::checkbox('sortableFields['.$f.']', !isset($s['sortableFields'][$f]) || $s['sortableFields'][$f]);?></td>
-						<td><?=Inp::checkbox('tplFields[admin-list]['.$f.']', !isset($s['tplFields']['admin-list'][$f]) || $s['tplFields']['admin-list'][$f]);?></td>
-						<td><?=Inp::checkbox('tplFields[list]['.$f.']', !isset($s['tplFields']['list'][$f]) || $s['tplFields']['list'][$f]);?></td>
-						<td><?=Inp::checkbox('tplFields[view]['.$f.']', !isset($s['tplFields']['view'][$f]) || $s['tplFields']['view'][$f]);?></td>
-						<td><?=Inp::checkbox('tplFields[edit]['.$f.']', !isset($s['tplFields']['edit'][$f]) || $s['tplFields']['edit'][$f]);?></td>
+						<td><?=Inp::checkbox('sortableFields['.$f.']', !isset($s['sortableFields'][$f]) || $s['sortableFields'][$f], '', array('class' => 'pretty'));?></td>
+						<td><?=Inp::checkbox('tplFields[admin-list]['.$f.']', !isset($s['tplFields']['admin-list'][$f]) || $s['tplFields']['admin-list'][$f], '', array('class' => 'pretty'));?></td>
+						<td><?=Inp::checkbox('tplFields[list]['.$f.']', !isset($s['tplFields']['list'][$f]) || $s['tplFields']['list'][$f], '', array('class' => 'pretty'));?></td>
+						<td><?=Inp::checkbox('tplFields[view]['.$f.']', !isset($s['tplFields']['view'][$f]) || $s['tplFields']['view'][$f], '', array('class' => 'pretty'));?></td>
+						<td><?=Inp::checkbox('tplFields[edit]['.$f.']', !isset($s['tplFields']['edit'][$f]) || $s['tplFields']['edit'][$f], '', array('class' => 'pretty'));?></td>
 						<td><?=Inp::select('inputTypes['.$f.']', Inp::$tplVarInputTypes, getVar($s['inputTypes'][$f]));?></td>
 					</tr>
 				<? endforeach; ?>

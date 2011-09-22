@@ -8,8 +8,8 @@
 <? if($this->collection): ?>
 	<table class="std-grid tr-highlight">
 	<tr>
-		<th><?= $this->sorters['id']; ?></th>
-		<th><?= $this->sorters['index']; ?></th>
+		<th>id</th>
+		<th>index</th>
 		<th><?= $this->sorters['title']; ?></th>
 		<th>Опции</th>
 	</tr>

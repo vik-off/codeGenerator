@@ -13,15 +13,14 @@ class Inp {
 	
 	private static $_checkboxPK = 0;
 	
-	public static function checkbox($name, $checked, $title = ''){
+	public static function checkbox($name, $checked, $title = '', $params = array()){
 		
-		$cssId = 'checkbox-'.self::_getCheckboxPK();
 		$output = '
 			<input type="hidden" name="'.$name.'" value="0" />
-			<input id="'.$cssId.'" type="checkbox" name="'.$name.'" value="1" '.($checked ? 'checked="checked"' : '').' />
+			<label class="'.getVar($params['class'], '').'">
+				<input type="checkbox" class="'.getVar($params['class'], '').'" name="'.$name.'" value="1" '.($checked ? 'checked="checked"' : '').' />
+			</label>
 		';
-		if(strlen($title))
-			$output .= '<label for="'.$cssId.'">'.$title.'</label>';
 			
 		return $output;
 	}

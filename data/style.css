@@ -91,3 +91,18 @@ table.fields-list{
 table.fields-list td{
 	text-align: center;
 }
+
+label.pretty{
+	display: inline-block;
+	padding: 7px;
+	background-color: #FFE9E9;
+	border: solid 1px #FFD6D6;
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	-khtml-border-radius: 5px;
+}
+label.pretty.checked{
+	background-color: #E9FFE9;
+	border: solid 1px #BFFFC0;
+}

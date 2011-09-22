@@ -91,6 +91,21 @@ class CodeGenerator extends CodeGeneratorCommon{
 		$this->createFile('output/templates/'.$modelName.'/', 'delete.php', $content);
 	}
 	
+	public function getEditTplInput($type, $name){
+		
+		$value = '$this->'.$name;
+		
+		switch($type){
+			case 'input-text': 		return '<input type="text" name="'.$name.'" value="<?= '.$value.'; ?>" />';
+			case 'input-password': 	return '<input type="password" name="'.$name.'" value="<?= '.$value.'; ?>" />';
+			case 'checkbox': 		return '<input type="checkbox" name="'.$name.'" value="1" <? if('.$value.'): ?>checked="checked"<? endif; ?> />';
+			case 'textarea': 		return '<textarea name="'.$name.'"><?= '.$value.'; ?></textarea>';
+			case 'wysiwyg': 		return '<textarea class="wysiwyg" name="'.$name.'"><?= '.$value.'; ?></textarea>';
+			case 'select': 			return '<select name="'.$name.'"><option value="">Выберите...</option></select>';
+			default: trigger_error('Неизвестный тип поля ввода <b>'.$type.'</b>', E_USER_ERROR);
+		}
+	}
+	
 }
 
 ?>

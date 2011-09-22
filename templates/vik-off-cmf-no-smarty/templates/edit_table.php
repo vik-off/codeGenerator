@@ -1,51 +1,37 @@
 
+<ul id="submit-box-floating"></ul>
+
 <form id="edit-form" action="" method="post">
-	{$formcode}
-	<input type="hidden" name="id" value="{$instanceId}" />
+	<?= '<?= FORMCODE; ?>'; ?>
 	
-	<table class="stdItemEdit">
+	<input type="hidden" name="id" value="<?= '<?= $this->instanceId; ?>'; ?>" />
+	
+	<table id="edit-form-table">
 	<tr>
-		<th class="title" colspan="2">
-			{if !$instanceId}
-				Создание новой записи
-			{else}
-				Редактирование записи #{$instanceId}
-			{/if}
-		</th>
+		<td class="title" colspan="2"><?= '<?= $this->pageTitle; ?>'; ?></td>
 	</tr>
 <?
 foreach($FIELDS_TITLES as $field => $title){
-	if($field != 'id'){
+	if(!empty($ALLOWED_FIELDS[$field]) && $field != 'id'){
 		echo
 '	<tr>
 		<th>'.$title.'</th>
-		<td><input type="text" name="'.$field.'" value="{$'.$field.'}" /></td>
+		<td>'.$this->getEditTplInput($INPUT_TYPES[$field], $field).'</td>
 	</tr>
 ';	}
 }
 ?>
-	<tr>
-		<th>Действия</th>
-		<td class="actions">
-		
-			<input class="button" type="submit" name="action[<?=$MODEL_NAME_LOW;?>/save]" value="Сохранить" />
-			<a class="button" href="{a href=admin/content/<?=$MODEL_NAME_LOW;?>/list}">отмена</a>
-			<a class="button" href="{a href=admin/content/<?=$MODEL_NAME_LOW;?>/delete/$instanceId}">удалить</a>
+
+	<tr id="submit-box">
+		<td class="actions" colspan="2">
+			<input id="submit-save" class="button" type="submit" name="action[<?=$MODEL_NAME_LOW;?>/save][admin/content/<?=$MODEL_NAME_LOW;?>/list]" value="Сохранить" title="Созхранить изменения и вернуться к списку" />
+			<input id="submit-apply" class="button" type="submit" name="action[<?=$MODEL_NAME_LOW;?>/save][admin/content/<?=$MODEL_NAME_LOW;?>/edit/<?= '<?= $this->instanceId ? $this->instanceId : \'(%id%)\' ; ?>'; ?>]" value="Применить" title="Сохранить изменения и продолжить редактирование" />
+			<a id="submit-cancel" class="button" href="<?= "<?= href('admin/content/$MODEL_NAME_LOW/list'); ?>"; ?>" title="Отменить все изменения и вернуться к списку">отмена</a>
+			<?= '<? if($this->instanceId): ?>'; ?>
 			
-			<div class="after-action">
-				+ 
-				<select name="redirect" id="next-action-select">
-					<option value="{a href=admin/content/<?=$MODEL_NAME_LOW;?>/list}">К адм. списку записей</option>
-					<option value="{a href=admin/content/<?=$MODEL_NAME_LOW;?>/edit/$instanceId}">Продолжить редактирование</option>
-					<option value="{a href=admin/content/<?=$MODEL_NAME_LOW;?>/new}">Создать новую запись</option>
-				</select>
-			</div>
-			
-		</td>
-	</tr>
-	<tr>
-		<td class="footer" colspan="2">
-			<a href="mailto:yurijnovikov@gmail.com" title="Разработчик: Юрий Новиков">vik-off CMF</a>
+				<a id="submit-delete" class="button" href="<?= "<?= href('admin/content/$MODEL_NAME_LOW/delete/'.\$this->instanceId); ?>"; ?>" title="Удалить запись">удалить</a>
+				<a id="submit-copy" class="button" href="<?= "<?= href('admin/content/$MODEL_NAME_LOW/copy/'.\$this->instanceId); ?>"; ?>" title="Сделать копию записи">копировать</a>
+			<?= '<? endif; ?>'; ?>
 		</td>
 	</tr>
 	</table>
@@ -54,11 +40,8 @@ foreach($FIELDS_TITLES as $field => $title){
 <script type="text/javascript">
 
 $(function(){
-	
-	$("#next-action-select").val("{{$redirect}}");
-	
-	$("#edit-form").validate({{$validation}});
-
+	$("#edit-form").validate( { <?= '<?= $this->validation; ?>'; ?> } );
+	enableFloatingSubmits();
 });
 
 </script>

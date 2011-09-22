@@ -12,7 +12,7 @@
 	<tr>
 <? foreach($FIELDS_TITLES as $field => $title){
 	if(!empty($ALLOWED_FIELDS[$field]))
-		echo "\t\t".'<th>'.(isset($SORTABLE_FIELDS[$field]) ? "<?= \$this->sorters['".$field."']; ?>" : $title).'</th>'."\r\n";
+		echo "\t\t".'<th>'.(!empty($SORTABLE_FIELDS[$field]) ? "<?= \$this->sorters['".$field."']; ?>" : $title).'</th>'."\r\n";
 	} ?>
 		<th>Опции</th>
 	</tr>
