@@ -115,7 +115,7 @@ class __CLASSNAME__Collection extends GenericObjectCollection{
 	
 	
 	/** ТОЧКА ВХОДА В КЛАСС */
-	public static function Load(){
+	public static function load(){
 			
 		$instance = new __CLASSNAME__Collection();
 		return $instance;
@@ -135,6 +135,17 @@ class __CLASSNAME__Collection extends GenericObjectCollection{
 		$this->_sortableLinks = $sorter->getSortableLinks();
 		$this->_pagination = $paginator->getButtons();
 		$this->_linkTags = $paginator->getLinkTags();
+		
+		return $data;
+	}
+	
+	/** ПОЛУЧИТЬ СПИСОК ВСЕХ ЭЛЕМЕНТОВ */
+	public function getAll(){
+		
+		$data = db::get()->getAllIndexed('SELECT * FROM '.__CLASSNAME__::TABLE, 'id', array());
+		
+		foreach($data as &$row)
+			$row = __CLASSNAME__::forceLoad($row['id'], $row)->getAllFieldsPrepared();
 		
 		return $data;
 	}
