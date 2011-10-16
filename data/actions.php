@@ -14,6 +14,7 @@ if($action == 'saveData'){
 	$s['template'] = trim($_POST['template']);
 	
 	$s['tablename'] 	= trim($_POST['tablename']);
+	$s['modulename'] 	= trim($_POST['modulename']);
 	$s['modelclass'] 	= trim($_POST['modelclass']);
 	$s['controlclass'] 	= trim($_POST['controlclass']);
 	

@@ -2,6 +2,7 @@
 session_start();
 define('FS_ROOT', dirname(__FILE__).'/');
 define('GEN_TYPE', 'all');
+error_reporting(E_ALL & ~E_NOTICE);
 
 require_once('setup.php');
 
@@ -35,17 +36,25 @@ require('data/actions.php');
 	function capitalize(string){return string.charAt(0).toUpperCase() + string.slice(1);}
 	
 	function tblNameEdit(){
-		var model = capitalize(ge('tablename').value.toLowerCase());
-		ge('modelclass').value = model;
-		ge('controlclass').value = model + 'Controller';
+		var table = ge('tablename').value.toLowerCase();
+		ge('modulename').value = table;
+		ge('modelclass').value = capitalize(table) + '_Model';
+		ge('controlclass').value = capitalize(table) + '_Controller';
+	}
+	
+	function moduleNameEdit(){
+		var module = ge('modulename').value;
+		ge('modelclass').value = capitalize(module) + '_Model';
+		ge('controlclass').value = capitalize(module) + '_Controller';
 	}
 	
 	document.body.onload = function(){
 	
 		ge('tablename').onkeyup = tblNameEdit;
+		ge('modulename').onkeyup = moduleNameEdit;
 	
 		ge('modelclass').onkeyup = function(){
-			ge('controlclass').value = this.value + 'Controller';
+			ge('controlclass').value = this.value.replace('_Model', '_Controller');
 		}
 		
 	}
@@ -88,6 +97,9 @@ require('data/actions.php');
 			<input id="tablename" type="text" name="tablename" value="<?=getVar($s['tablename']);?>">
 			<a href="#" onclick="tblNameEdit(); return false;">Раздать имена</a>
 		</td>
+	</tr><tr>
+		<td>Модуль</td>
+		<td><input id="modulename" type="text" name="modulename" value="<?=getVar($s['modulename']);?>"></td>
 	</tr><tr>
 		<td>Класс модели</td>
 		<td><input id="modelclass" type="text" name="modelclass" value="<?=getVar($s['modelclass']);?>"></td>
@@ -164,7 +176,7 @@ require('data/actions.php');
 				<?
 				foreach(file('./templates/templates.txt') as $t){
 					$t = trim($t);
-					echo '<option value="'.$t.'" '.($s['template'] == $t ? 'selected="selected"' : '').'>'.$t.'</option>';
+					echo '<option value="'.$t.'" '.(getVar($s['template']) == $t ? 'selected="selected"' : '').'>'.$t.'</option>';
 				}
 				?>
 			</select>

@@ -1,12 +1,16 @@
 %%%	USE PLACEHOLDERS:
 %%%		__CLASSNAME__
 %%%		__TABLENAME__
+%%%		__MODULE__
 %%%		__VALIDATION_COMMON__
 %%%		__VALIDATION_INDIVIDUAL__
 %%%		__FIELD_TITLES__
 <?php
 
-class __CLASSNAME__ extends GenericObject{
+class __CLASSNAME__ extends GenericObject {
+	
+	/** имя модуля */
+	const MODULE = '__MODULE__';
 	
 	const TABLE = '__TABLENAME__';
 	
@@ -31,9 +35,9 @@ class __CLASSNAME__ extends GenericObject{
 		return new __CLASSNAME__($id, self::INIT_EXISTS_FORCE, $fieldvalues);
 	}
 	
-	/** СЛУЖЕБНЫЙ МЕТОД (получение констант из родителя) */
-	public function getConst($name){
-		return constant(__CLASS__.'::'.$name);
+	/** ПОЛУЧИТЬ ИМЯ КЛАССА */
+	public function getClass(){
+		return __CLASS__;
 	}
 	
 	/**
@@ -64,20 +68,18 @@ class __CLASSNAME__ extends GenericObject{
 	public function getValidator(){
 		
 		// инициализация экземпляра валидатора
-		if(is_null($this->validator)){
+		$validator = new Validator();
 		
-			$this->validator = new Validator();
-			$this->validator->rules(__VALIDATION_COMMON__,
+		$validator->rules(__VALIDATION_COMMON__,
 			__VALIDATION_INDIVIDUAL__);
-			$this->validator->setFieldTitles(array(__FIELD_TITLES__			));
-		}
+		$validator->setFieldTitles(array(__FIELD_TITLES__			));
 		
 		// применение специальных правил для редактирования или добавления объекта
 		if($this->isExistsObj){
 		
 		}
 		
-		return $this->validator;
+		return $validator;
 	}
 		
 	/** ПРЕ-ВАЛИДАЦИЯ ДАННЫХ */
@@ -115,7 +117,7 @@ class __CLASSNAME__Collection extends GenericObjectCollection{
 	
 	
 	/** ТОЧКА ВХОДА В КЛАСС */
-	public static function Load(){
+	public static function load(){
 			
 		$instance = new __CLASSNAME__Collection();
 		return $instance;
@@ -135,6 +137,17 @@ class __CLASSNAME__Collection extends GenericObjectCollection{
 		$this->_sortableLinks = $sorter->getSortableLinks();
 		$this->_pagination = $paginator->getButtons();
 		$this->_linkTags = $paginator->getLinkTags();
+		
+		return $data;
+	}
+	
+	/** ПОЛУЧИТЬ СПИСОК ВСЕХ ЭЛЕМЕНТОВ */
+	public function getAll(){
+		
+		$data = db::get()->getAllIndexed('SELECT * FROM '.__CLASSNAME__::TABLE, 'id', array());
+		
+		foreach($data as &$row)
+			$row = __CLASSNAME__::forceLoad($row['id'], $row)->getAllFieldsPrepared();
 		
 		return $data;
 	}

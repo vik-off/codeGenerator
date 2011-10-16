@@ -47,7 +47,7 @@ class __CONTROLLERNAME__ extends Controller{
 		FrontendViewer::get()
 			->setTitle('Коллекция')
 			->setLinkTags($collection->getLinkTags())
-			->setContentSmarty(self::TPL_PATH.'list.tpl', $variables)
+			->setContentPhpFile(self::TPL_PATH.'list.php', $variables)
 			->render();
 	}
 	
@@ -59,7 +59,7 @@ class __CONTROLLERNAME__ extends Controller{
 			$variables = __MODELNAME__::Load($instanceId)->GetAllFieldsPrepared();
 			FrontendViewer::get()
 				->setTitle('Детально')
-				->setContentSmarty(self::TPL_PATH.'view.tpl', $variables)
+				->setContentPhpFile(self::TPL_PATH.'view.php', $variables)
 				->render();
 	}
 	
@@ -81,7 +81,7 @@ class __CONTROLLERNAME__ extends Controller{
 		BackendViewer::get()
 			->prependTitle('Список элементов')
 			->setLinkTags($collection->getLinkTags())
-			->setContentSmarty(self::TPL_PATH.'admin_list.tpl', $variables);
+			->setContentPhpFile(self::TPL_PATH.'admin_list.php', $variables);
 	}
 	
 	/** DISPLAY NEW (ADMIN) */
@@ -98,7 +98,7 @@ class __CONTROLLERNAME__ extends Controller{
 		BackendViewer::get()
 			->prependTitle($pageTitle)
 			->setBreadcrumbs('add', array(null, $pageTitle))
-			->setContentSmarty(self::TPL_PATH.'edit.tpl', $variables);
+			->setContentPhpFile(self::TPL_PATH.'edit.php', $variables);
 	}
 	
 	/** DISPLAY EDIT (ADMIN) */
@@ -118,7 +118,7 @@ class __CONTROLLERNAME__ extends Controller{
 		BackendViewer::get()
 			->prependTitle('Редактирование записи')
 			->setBreadcrumbs('add', array(null, 'Редактирование записи'))
-			->setContentSmarty(self::TPL_PATH.'edit.tpl', $variables);
+			->setContentPhpFile(self::TPL_PATH.'edit.php', $variables);
 		
 	}
 	
@@ -139,7 +139,7 @@ class __CONTROLLERNAME__ extends Controller{
 		BackendViewer::get()
 			->prependTitle($pageTitle)
 			->setBreadcrumbs('add', array(null, $pageTitle))
-			->setContentSmarty(self::TPL_PATH.'edit.tpl', $variables);
+			->setContentPhpFile(self::TPL_PATH.'edit.php', $variables);
 		
 	}
 	
@@ -156,7 +156,7 @@ class __CONTROLLERNAME__ extends Controller{
 		BackendViewer::get()
 			->prependTitle('Удаление записи')
 			->setBreadcrumbs('add', array(null, 'Удаление записи'))
-			->setContentSmarty(self::TPL_PATH.'delete.tpl', $variables);
+			->setContentPhpFile(self::TPL_PATH.'delete.php', $variables);
 		
 	}
 	
