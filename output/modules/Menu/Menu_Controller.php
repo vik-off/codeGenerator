@@ -1,19 +1,15 @@
-%%%	USE PLACEHOLDERS:
-%%%		__MODULE__
-%%%		__CONTROLLERNAME__
-%%%		__MODELNAME__
 <?php
 
-class __CONTROLLERNAME__ extends Controller {
+class Menu_Controller extends Controller {
 	
 	/** имя модуля */
-	const MODULE = '__MODULE__';
+	const MODULE = 'menu';
 	
 	/** элемент, отображаемый во view по умолчанию */
 	const DEFAULT_VIEW = 1;
 	
 	/** путь к шаблонам (относительно FS_ROOT) */
-	const TPL_PATH = 'modules/__MODULE_DIR__/templates/';
+	const TPL_PATH = 'modules/Menu/templates/';
 	
 	/** метод, отображаемый по умолачанию */
 	protected $_displayIndex = 'list';
@@ -44,7 +40,7 @@ class __CONTROLLERNAME__ extends Controller {
 	/** DISPLAY LIST */
 	public function display_list($params = array()){
 		
-		$collection = new __COLLECTION_CLASS__();
+		$collection = new Menu_Collection();
 		$variables = array(
 			'collection' => $collection->getPaginated(),
 			'pagination' => $collection->getPagination(),
@@ -63,7 +59,7 @@ class __CONTROLLERNAME__ extends Controller {
 		
 		$instanceId = getVar($params[0], 0, 'int');
 		
-		$variables = __MODELNAME__::load($instanceId)->GetAllFieldsPrepared();
+		$variables = Menu_Model::load($instanceId)->GetAllFieldsPrepared();
 		FrontendLayout::get()
 			->setTitle('Детально')
 			->setContentPhpFile(self::TPL_PATH.'view.php', $variables)

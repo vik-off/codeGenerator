@@ -45,7 +45,7 @@ class CodeGenerator extends CodeGeneratorCommon{
 		if(!empty($files['tpl-admin-list'])){
 
 			$this->generateTplAdminList(
-				$this->_data['modelclass'],
+				$this->_data['modulename'],
 				$this->_data['fieldsTitles'],
 				$this->_data['sortableFields'],
 				$this->_data['tplFields']['admin-list'],
@@ -58,7 +58,7 @@ class CodeGenerator extends CodeGeneratorCommon{
 		if(!empty($files['tpl-list'])){
 
 			$this->generateTplList(
-				$this->_data['modelclass'],
+				$this->_data['modulename'],
 				$this->_data['fieldsTitles'],
 				$files['tpl-list'],
 				$this->_data['tplFields']['list'],
@@ -71,7 +71,7 @@ class CodeGenerator extends CodeGeneratorCommon{
 		if(!empty($files['tpl-view'])){
 
 			$this->generateTplView(
-				$this->_data['modelclass'],
+				$this->_data['modulename'],
 				$this->_data['fieldsTitles'],
 				$files['tpl-view'],
 				$this->_data['tplFields']['view'],
@@ -84,7 +84,7 @@ class CodeGenerator extends CodeGeneratorCommon{
 		if(!empty($files['tpl-edit'])){
 
 			$this->generateTplEdit(
-				$this->_data['modelclass'],
+				$this->_data['modulename'],
 				$this->_data['fieldsTitles'],
 				$files['tpl-edit'],
 				$this->_data['tplFields']['edit'],
@@ -98,7 +98,7 @@ class CodeGenerator extends CodeGeneratorCommon{
 		if(!empty($files['tpl-delete'])){
 
 			$this->generateTplDelete(
-				$this->_data['modelclass'],
+				$this->_data['modulename'],
 				$this->_data['fieldsTitles'],
 				$this->_data['admSection']
 			);
@@ -122,89 +122,96 @@ class CodeGenerator extends CodeGeneratorCommon{
 			'__SORTABLE_FIELDS__'		=> $sortableFields,
 		);
 		$content = $this->parsePhpTemplate('templates/'.$this->_template.'/model.php', $placeholders);
-		$this->createFile('output/modules/'.ucfirst($this->_module).'/', $modelName.'.php', $content);
+		$this->createFile('output/modules/'.ucfirst($module).'/', $modelName.'.php', $content);
 	}
 
 	// ГЕНЕРАЦИЯ КОНТРОЛЛЕРА
 	public function generateController($module, $controllerName, $modelName, $admSection){
-	
+		
+		$moduleDir = ucfirst($module);
+		
 		$placeholders = array(
 			'__MODULE__'			=> $module,
+			'__MODULE_DIR__'		=> $moduleDir,
 			'__CONTROLLERNAME__' 	=> $controllerName,
 			'__MODELNAME__' 	 	=> $modelName,
 			'__COLLECTION_CLASS__' 	=> str_replace('_Model', '_Collection', $modelName),
 			'__ADMSECTION__'		=> $admSection,
-			'__MODEL_NAME_LOW__' 	=> $this->getModelUrlPart($modelName),
 		);
 		$content = $this->parsePhpTemplate('templates/'.$this->_template.'/controller.php', $placeholders);
-		$this->createFile('output/modules/'.ucfirst($this->_module).'/', $controllerName.'.php', $content);
+		$this->createFile('output/modules/'.ucfirst($this->_data['modulename']).'/', $controllerName.'.php', $content);
+		
+		$adminControllerName = str_replace('_Controller', '_AdminController', $controllerName);
+		$placeholders['__CONTROLLERNAME__'] = $adminControllerName;
+		$contentAdmin = $this->parsePhpTemplate('templates/'.$this->_template.'/controllerAdmin.php', $placeholders);
+		$this->createFile('output/modules/'.$moduleDir.'/', $adminControllerName.'.php', $contentAdmin);
 	}
 	
 	// ГЕНЕРАЦИЯ ШАБЛОНА ADMIN-LIST
-	public function generateTplAdminList($modelName, $fieldtitles, $sortableFields, $allowedFields, $admSection){
+	public function generateTplAdminList($module, $fieldtitles, $sortableFields, $allowedFields, $admSection){
 		
 		$content = $this->parseHtmlTemplate('templates/'.$this->_template.'/templates/admin_list.php', array(
-			'MODEL_NAME_LOW'  => $this->getModelUrlPart($modelName),
+			'MODULE'  		  => $module,
 			'FIELDS_TITLES'   => $fieldtitles,
 			'SORTABLE_FIELDS' => $sortableFields,
 			'ALLOWED_FIELDS'  => $allowedFields,
 			'ADMIN_SECTION'   => $admSection,
 		));
-		$this->createFile('output/templates/'.$modelName.'/', 'admin_list.php', $content);
+		$this->createFile('output/modules/'.ucfirst($module).'/templates/', 'admin_list.php', $content);
 	}
 	
 	// ГЕНЕРАЦИЯ ШАБЛОНА LIST
-	public function generateTplList($modelName, $fieldtitles, $type = TYPE_TABLE, $allowedFields, $admSection){
+	public function generateTplList($module, $fieldtitles, $type = TYPE_TABLE, $allowedFields, $admSection){
 		
 		$tpl = $type == TYPE_TABLE ? 'list_table.php' : 'list_div.php';
 		
 		$content = $this->parseHtmlTemplate('templates/'.$this->_template.'/templates/'.$tpl, array(
-			'MODEL_NAME_LOW'  => $this->getModelUrlPart($modelName),
+			'MODULE'  		  => $module,
 			'FIELDS_TITLES'   => $fieldtitles,
 			'ALLOWED_FIELDS'  => $allowedFields,
 			'ADMIN_SECTION'   => $admSection,
 		));
-		$this->createFile('output/templates/'.$modelName.'/', 'list.php', $content);
+		$this->createFile('output/modules/'.ucfirst($module).'/templates/', 'list.php', $content);
 	}
 	
 	// ГЕНЕРАЦИЯ ШАБЛОНА VIEW
-	public function generateTplView($modelName, $fieldtitles, $type = TYPE_TABLE, $allowedFields, $admSection){
+	public function generateTplView($module, $fieldtitles, $type = TYPE_TABLE, $allowedFields, $admSection){
 	
 		$tpl = $type == TYPE_TABLE ? 'view_table.php' : 'view_div.php';
 		
 		$content = $this->parseHtmlTemplate('templates/'.$this->_template.'/templates/'.$tpl, array(
-			'MODEL_NAME_LOW'  => $this->getModelUrlPart($modelName),
+			'MODULE'  		  => $module,
 			'FIELDS_TITLES'   => $fieldtitles,
 			'ALLOWED_FIELDS'  => $allowedFields,
 			'ADMIN_SECTION'   => $admSection,
 		));
-		$this->createFile('output/templates/'.$modelName.'/', 'view.php', $content);
+		$this->createFile('output/modules/'.ucfirst($module).'/templates/', 'view.php', $content);
 	}
 	
 	// ГЕНЕРАЦИЯ ШАБЛОНА EDIT
-	public function generateTplEdit($modelName, $fieldtitles, $type = TYPE_TABLE, $allowedFields, $inputTypes, $admSection){
+	public function generateTplEdit($module, $fieldtitles, $type = TYPE_TABLE, $allowedFields, $inputTypes, $admSection){
 	
 		$tpl = $type == TYPE_TABLE ? 'edit_table.php' : 'edit_div.php';
 		
 		$content = $this->parseHtmlTemplate('templates/'.$this->_template.'/templates/'.$tpl, array(
-			'MODEL_NAME_LOW' => $this->getModelUrlPart($modelName),
+			'MODULE'  		  => $module,
 			'FIELDS_TITLES' => $fieldtitles,
 			'ALLOWED_FIELDS' => $allowedFields,
 			'INPUT_TYPES' => $inputTypes,
 			'ADMIN_SECTION'   => $admSection,
 		));
-		$this->createFile('output/templates/'.$modelName.'/', 'edit.php', $content);
+		$this->createFile('output/modules/'.ucfirst($module).'/templates/', 'edit.php', $content);
 	}
 	
 	// ГЕНЕРАЦИЯ ШАБЛОНА DELETE
-	public function generateTplDelete($modelName, $fieldtitles, $admSection){
+	public function generateTplDelete($module, $fieldtitles, $admSection){
 		
 		$content = $this->parseHtmlTemplate('templates/'.$this->_template.'/templates/delete.php', array(
-			'MODEL_NAME_LOW' => $this->getModelUrlPart($modelName),
-			'FIELDS_TITLES' => $fieldtitles,
+			'MODULE'  		  => $module,
+			'FIELDS_TITLES'   => $fieldtitles,
 			'ADMIN_SECTION'   => $admSection,
 		));
-		$this->createFile('output/templates/'.$modelName.'/', 'delete.php', $content);
+		$this->createFile('output/modules/'.ucfirst($module).'/templates/', 'delete.php', $content);
 	}
 	
 	/** ПОЛУЧИТЬ HTML-INPUT УКАЗАННОГО ТИПА */

@@ -11,7 +11,7 @@
 	if(!empty($ALLOWED_FIELDS[$field]))
 		echo "\t\t".'<h3>'.$title.'</h3>'."\r\n"
 			."\t\t<?= \$item['$field']; ?>\r\n"; ?>
-		<div><a href="<?= "<?= href('$MODEL_NAME_LOW/view/'.\$item['id']); ?>"; ?>">Подробней</a></div>
+		<div><a href="<?= "<?= href('$MODULE/view/'.\$item['id']); ?>"; ?>">Подробней</a></div>
 	</p>
 	<?= '<? endforeach; ?>'; ?>
 	

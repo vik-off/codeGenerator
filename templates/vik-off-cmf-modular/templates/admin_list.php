@@ -1,6 +1,6 @@
 
 <div class="options-row">
-	<a href="<?= "<?= href('admin/$ADMIN_SECTION/$MODEL_NAME_LOW/new'); ?>"; ?>">Добавить запись</a>
+	<a href="<?= "<?= href('admin/$ADMIN_SECTION/$MODULE/new'); ?>"; ?>">Добавить запись</a>
 </div>
 
 <?= '<?= $this->pagination; ?>'; ?>
@@ -8,7 +8,7 @@
 
 <?= '<? if($this->collection): ?>'; ?>
 
-	<table class="std-grid tr-highlight">
+	<table class="grid wide tr-highlight">
 	<tr>
 <? foreach($FIELDS_TITLES as $field => $title){
 	if(!empty($ALLOWED_FIELDS[$field]))
@@ -25,9 +25,9 @@
 			
 		<td class="center">
 			<div class="tr-hover-visible options">
-				<a href="<?= "<?= href('$MODEL_NAME_LOW/view/'.\$item['id']); ?>"; ?>" title="Просмотреть"><img src="images/backend/icon-view.png" alt="Просмотреть" /></a>
-				<a href="<?= "<?= href('admin/$ADMIN_SECTION/$MODEL_NAME_LOW/edit/'.\$item['id']); ?>"; ?>" title="Редактировать"><img src="images/backend/icon-edit.png" alt="Редактировать" /></a>
-				<a href="<?= "<?= href('admin/$ADMIN_SECTION/$MODEL_NAME_LOW/delete/'.\$item['id']); ?>"; ?>" title="Удалить"><img src="images/backend/icon-delete.png" alt="Удалить" /></a>
+				<a href="<?= "<?= href('$MODULE/view/'.\$item['id']); ?>"; ?>" title="Просмотреть"><img src="images/backend/icon-view.png" alt="Просмотреть" /></a>
+				<a href="<?= "<?= href('admin/$ADMIN_SECTION/$MODULE/edit/'.\$item['id']); ?>"; ?>" title="Редактировать"><img src="images/backend/icon-edit.png" alt="Редактировать" /></a>
+				<a href="<?= "<?= href('admin/$ADMIN_SECTION/$MODULE/delete/'.\$item['id']); ?>"; ?>" title="Удалить"><img src="images/backend/icon-delete.png" alt="Удалить" /></a>
 			</div>
 		</td>
 	</tr>

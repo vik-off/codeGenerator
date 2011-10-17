@@ -20,7 +20,7 @@
 		echo "\t\t<td><?= \$item['$field']; ?></td>\r\n"; ?>
 		
 		<td style="font-size: 11px;">
-			<a href="<?= "<?= href('$MODEL_NAME_LOW/view/'.\$item['id']); ?>"; ?>">Подробней</a>
+			<a href="<?= "<?= href('$MODULE/view/'.\$item['id']); ?>"; ?>">Подробней</a>
 		</td>
 	</tr>
 	<?= '<? endforeach; ?>'; ?>

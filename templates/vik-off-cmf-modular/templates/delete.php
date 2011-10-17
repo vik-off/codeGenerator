@@ -18,8 +18,8 @@
 			<input type="hidden" name="id" value="<?= '<?= $this->instanceId; ?>'; ?>" />
 			<?= '<?= FORMCODE; ?>'; ?>
 			
-			<input class="button" type="submit" name="action[<?=$MODEL_NAME_LOW;?>/delete]" value="Удалить" />
-			<a class="button" href="<?= "<?= href('admin/$ADMIN_SECTION/$MODEL_NAME_LOW'); ?>"; ?>">Отмена</a>
+			<input class="button" type="submit" name="action[admin/<?=$MODULE;?>/delete]" value="Удалить" />
+			<a class="button" href="<?= "<?= href('admin/$ADMIN_SECTION/$MODULE'); ?>"; ?>">Отмена</a>
 		</form>
 	</div>
 	

@@ -5,6 +5,7 @@ class Menu_Model extends GenericObject {
 	/** имя модуля */
 	const MODULE = 'menu';
 	
+	/** таблица БД */
 	const TABLE = 'menus';
 	
 	const NOT_FOUND_MESSAGE = 'Страница не найдена';
@@ -65,13 +66,12 @@ class Menu_Model extends GenericObject {
 		
 		$validator->rules(array(),
 			array(
-                'name' => array('length' => array('max' => '255')),
-                'create_date' => array('settype' => 'int'),
+                'name' => array('required' => true, 'length' => array('max' => '255'))
             ));
 		$validator->setFieldTitles(array(
 			'id' => 'id',
-			'name' => 'name',
-			'create_date' => 'create_date',
+			'name' => 'Название',
+			'create_date' => 'Дата создания',
 		));
 		
 		return $validator;
@@ -110,8 +110,8 @@ class Menu_Collection extends GenericObjectCollection{
 	 */
 	protected $_sortableFieldsTitles = array(
 		'id' => 'id',
-		'name' => 'name',
-		'create_date' => 'create_date',
+		'name' => 'Название',
+		'create_date' => 'Дата создания',
 	);
 	
 	

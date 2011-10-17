@@ -1,5 +1,5 @@
 
-<div><a href="<?= "<?= href('$MODEL_NAME_LOW/list'); ?> "; ?>">Вернуться к списку</a></div>
+<div><a href="<?= "<?= href('$MODULE/list'); ?> "; ?>">Вернуться к списку</a></div>
 
 <h2>Запись #<?= '<?= $this->instanceId; ?>'; ?></h2>
 

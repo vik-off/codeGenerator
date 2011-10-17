@@ -24,13 +24,13 @@ foreach($FIELDS_TITLES as $field => $title){
 
 	<tr id="submit-box">
 		<td class="actions" colspan="2">
-			<input id="submit-save" class="button" type="submit" name="action[<?=$MODEL_NAME_LOW;?>/save][admin/<?=$ADMIN_SECTION;?>/<?=$MODEL_NAME_LOW;?>/list]" value="Сохранить" title="Созхранить изменения и вернуться к списку" />
-			<input id="submit-apply" class="button" type="submit" name="action[<?=$MODEL_NAME_LOW;?>/save][admin/<?=$ADMIN_SECTION;?>/<?=$MODEL_NAME_LOW;?>/edit/<?= '<?= $this->instanceId ? $this->instanceId : \'(%id%)\' ; ?>'; ?>]" value="Применить" title="Сохранить изменения и продолжить редактирование" />
-			<a id="submit-cancel" class="button" href="<?= "<?= href('admin/$ADMIN_SECTION/$MODEL_NAME_LOW/list'); ?>"; ?>" title="Отменить все изменения и вернуться к списку">отмена</a>
+			<input id="submit-save" class="button" type="submit" name="action[admin/<?=$MODULE;?>/save][admin/<?=$ADMIN_SECTION;?>/<?=$MODULE;?>/list]" value="Сохранить" title="Созхранить изменения и вернуться к списку" />
+			<input id="submit-apply" class="button" type="submit" name="action[admin/<?=$MODULE;?>/save][admin/<?=$ADMIN_SECTION;?>/<?=$MODULE;?>/edit/<?= '<?= $this->instanceId ? $this->instanceId : \'(%id%)\' ; ?>'; ?>]" value="Применить" title="Сохранить изменения и продолжить редактирование" />
+			<a id="submit-cancel" class="button" href="<?= "<?= href('admin/$ADMIN_SECTION/$MODULE/list'); ?>"; ?>" title="Отменить все изменения и вернуться к списку">отмена</a>
 			<?= '<? if($this->instanceId): ?>'; ?>
 			
-				<a id="submit-delete" class="button" href="<?= "<?= href('admin/$ADMIN_SECTION/$MODEL_NAME_LOW/delete/'.\$this->instanceId); ?>"; ?>" title="Удалить запись">удалить</a>
-				<a id="submit-copy" class="button" href="<?= "<?= href('admin/$ADMIN_SECTION/$MODEL_NAME_LOW/copy/'.\$this->instanceId); ?>"; ?>" title="Сделать копию записи">копировать</a>
+				<a id="submit-delete" class="button" href="<?= "<?= href('admin/$ADMIN_SECTION/$MODULE/delete/'.\$this->instanceId); ?>"; ?>" title="Удалить запись">удалить</a>
+				<a id="submit-copy" class="button" href="<?= "<?= href('admin/$ADMIN_SECTION/$MODULE/copy/'.\$this->instanceId); ?>"; ?>" title="Сделать копию записи">копировать</a>
 			<?= '<? endif; ?>'; ?>
 		</td>
 	</tr>
