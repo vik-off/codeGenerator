@@ -35,11 +35,11 @@ function array_stripslashes($arr){
 define('TYPE_DIV', 'div');
 define('TYPE_TABLE', 'table');
 
-require_once('data/CodeGeneratorParent.class.php');
-require_once('data/DbStuctParser.class.php');
-require_once('data/Messenger.class.php');
-require_once('data/Storage.class.php');
-require_once('data/Inp.class.php');
+require_once('data/CodeGeneratorCommon.php');
+require_once('data/DbStuctParser.php');
+require_once('data/Messenger.php');
+require_once('data/Storage.php');
+require_once('data/Inp.php');
 
 $s = & Storage::get(GEN_TYPE)->data;
 

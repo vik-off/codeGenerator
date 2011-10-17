@@ -4,11 +4,13 @@ class CodeGeneratorCommon{
 	
 	
 	protected $_template = null;
+	protected $_data = null;
 	
 	// КОНСТРУКТОР
-	public function __construct($template, $clearDir = FALSE){
+	public function __construct($template, $data, $clearDir){
 		
 		$this->_template = $template;
+		$this->_data = $data;
 		
 		if(!$this->_template)
 			throw new Exception('Неверное имя шаблона');
@@ -16,6 +18,9 @@ class CodeGeneratorCommon{
 		if($clearDir)
 			$this->clearOutputDir();
 	}
+	
+	/** СГЕНЕРИРОВАТЬ ВСЕ НЕОБХОДИМЫЕ ФАЙЛЫ */
+	public function generateAll($files){}
 	
 	// ФУНКЦИЯ СОЗДАНИЯ ФАЙЛА
 	public function createFile($path, $file, $content){
@@ -34,21 +39,22 @@ class CodeGeneratorCommon{
 		if(!defined('FS_ROOT'))
 			die('FS_ROOT not defined');
 			
+		$MODULES = FS_ROOT.'output/modules';
 		$MODELS = FS_ROOT.'output/models';
 		$CONTROLLERS = FS_ROOT.'output/controllers';
 		$TEMPLATES = FS_ROOT.'output/templates';
 		
-		if(is_dir($MODELS)){
+		if(is_dir($MODULES))
+			self::_removeRecursive($MODULES);
+		
+		if(is_dir($MODELS))
 			self::_removeRecursive($MODELS);
-		}
 		
-		if(is_dir($CONTROLLERS)){
+		if(is_dir($CONTROLLERS))
 			self::_removeRecursive($CONTROLLERS);
-		}
 		
-		if(is_dir($TEMPLATES)){
+		if(is_dir($TEMPLATES))
 			self::_removeRecursive($TEMPLATES);
-		}
 		
 		Messenger::get()->addInfo('Ранее сгенерированные файлы удалены');
 	}

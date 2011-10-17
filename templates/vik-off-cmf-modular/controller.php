@@ -1,4 +1,5 @@
 %%%	USE PLACEHOLDERS:
+%%%		__MODULE__
 %%%		__CONTROLLERNAME__
 %%%		__MODELNAME__
 %%%		__MODEL_NAME_LOW__
@@ -6,29 +7,45 @@
 
 class __CONTROLLERNAME__ extends Controller{
 	
+	/** имя модуля */
+	const MODULE = '__MODULE__';
+	
+	/** элемент, отображаемый во view по умолчанию */
 	const DEFAULT_VIEW = 1;
+	
+	/** путь к шаблонам (относительно FS_ROOT) */
 	const TPL_PATH = '__MODELNAME__/';
 	
-	// методы, отображаемые по умолчанию
-	protected $_defaultFrontendDisplay = 'list';
-	protected $_defaultBackendDisplay = 'list';
+	/** метод, отображаемый по умолачанию */
+	protected $_displayIndex = 'view';
 	
-	// права на выполнение методов контроллера
-	public $permissions = array(
-		'display_list' 			=> PERMS_UNREG,
-		'display_view' 			=> PERMS_UNREG,
+	/** ассоциация методов контроллера с ресурсами */
+	public $methodResources = array(
+		'display_list' 			=> 'view',
+		'display_view' 			=> 'view',
 		
-		'admin_display_list'	=> PERMS_ADMIN,
-		'admin_display_new'		=> PERMS_ADMIN,
-		'admin_display_edit'	=> PERMS_ADMIN,
-		'admin_display_copy'	=> PERMS_ADMIN,
-		'admin_display_delete'	=> PERMS_ADMIN,
+		'admin_display_list'	=> 'edit',
+		'admin_display_new'		=> 'edit',
+		'admin_display_edit'	=> 'edit',
+		'admin_display_copy'	=> 'edit',
+		'admin_display_delete'	=> 'edit',
 
-		'action_save' 			=> PERMS_ADMIN,
-		'action_delete' 		=> PERMS_ADMIN,
+		'action_save' 			=> 'edit',
+		'action_delete' 		=> 'edit',
 	);
 	
-	protected $_title = null;
+	
+	/** ПРОВЕРКА ПРАВ НА ВЫПОЛНЕНИЕ РЕСУРСА */
+	public function checkResourcePermission($resource){
+		
+		return Acl_Manager::get()->isResourceAllowed(self::MODULE, $resource);
+	}
+	
+	/** ПОЛУЧИТЬ ИМЯ КЛАССА */
+	public function getClass(){
+		return __CLASS__;
+	}
+	
 	
 	/////////////////////
 	////// DISPLAY //////
@@ -37,7 +54,7 @@ class __CONTROLLERNAME__ extends Controller{
 	/** DISPLAY LIST */
 	public function display_list($params = array()){
 		
-		$collection = new __MODELNAME__Collection();
+		$collection = new __COLLECTION_CLASS__();
 		$variables = array(
 			'collection' => $collection->getPaginated(),
 			'pagination' => $collection->getPagination(),
@@ -56,11 +73,11 @@ class __CONTROLLERNAME__ extends Controller{
 		
 		$instanceId = getVar($params[0], 0, 'int');
 		
-			$variables = __MODELNAME__::Load($instanceId)->GetAllFieldsPrepared();
-			FrontendViewer::get()
-				->setTitle('Детально')
-				->setContentPhpFile(self::TPL_PATH.'view.php', $variables)
-				->render();
+		$variables = __MODELNAME__::load($instanceId)->GetAllFieldsPrepared();
+		FrontendViewer::get()
+			->setTitle('Детально')
+			->setContentPhpFile(self::TPL_PATH.'view.php', $variables)
+			->render();
 	}
 	
 	
@@ -71,7 +88,7 @@ class __CONTROLLERNAME__ extends Controller{
 	/** DISPLAY LIST (ADMIN) */
 	public function admin_display_list($params = array()){
 		
-		$collection = new __MODELNAME__Collection();
+		$collection = new __COLLECTION_CLASS__();
 		$variables = array(
 			'collection' => $collection->getPaginated(),
 			'pagination' => $collection->getPagination(),
@@ -92,7 +109,7 @@ class __CONTROLLERNAME__ extends Controller{
 		$variables = array_merge($_POST, array(
 			'instanceId' => 0,
 			'pageTitle'  => $pageTitle,
-			'validation' => __MODELNAME__::Create()->getValidator()->getJsRules(),
+			'validation' => __MODELNAME__::create()->getValidator()->getJsRules(),
 		));
 		
 		BackendViewer::get()
@@ -105,7 +122,7 @@ class __CONTROLLERNAME__ extends Controller{
 	public function admin_display_edit($params = array()){
 		
 		$instanceId = getVar($params[0], 0 ,'int');
-		$instance = __MODELNAME__::Load($instanceId);
+		$instance = __MODELNAME__::load($instanceId);
 		
 		$pageTitle = '<span style="font-size: 14px;">Редактирование элемента</span> #'.$instance->getField('id');
 	
@@ -126,7 +143,7 @@ class __CONTROLLERNAME__ extends Controller{
 	public function admin_display_copy($params = array()){
 		
 		$instanceId = getVar($params[0], 0 ,'int');
-		$instance = __MODELNAME__::Load($instanceId);
+		$instance = __MODELNAME__::load($instanceId);
 		
 		$pageTitle = 'Копирование записи';
 	
@@ -147,7 +164,7 @@ class __CONTROLLERNAME__ extends Controller{
 	public function admin_display_delete($params = array()){
 		
 		$instanceId = getVar($params[0], 0 ,'int');
-		$instance = __MODELNAME__::Load($instanceId);
+		$instance = __MODELNAME__::load($instanceId);
 
 		$variables = array_merge($instance->GetAllFieldsPrepared(), array(
 			'instanceId' => $instanceId,
@@ -173,7 +190,9 @@ class __CONTROLLERNAME__ extends Controller{
 		
 		if($instance->save($_POST)){
 			Messenger::get()->addSuccess('Запись сохранена');
-			$this->_redirectUrl = !empty($this->_redirectUrl) ? preg_replace('/\(%([\w\-]+)%\)/e', '$instance->getField("$1")', $this->_redirectUrl) : null;
+			$this->_redirectUrl = !empty($this->_redirectUrl)
+				? preg_replace('/\(%([\w\-]+)%\)/e', '$instance->getField("$1")', $this->_redirectUrl)
+				: null;
 			return TRUE;
 		}else{
 			Messenger::get()->addError('Не удалось сохранить запись:', $instance->getError());
@@ -185,12 +204,12 @@ class __CONTROLLERNAME__ extends Controller{
 	public function action_delete($params = array()){
 		
 		$instanceId = getVar($_POST['id'], 0, 'int');
-		$instance = __MODELNAME__::Load($instanceId);
+		$instance = __MODELNAME__::load($instanceId);
 		
 		// установить редирект на admin-list
-		$this->setRedirectUrl('admin/content/__MODEL_NAME_LOW__/list');
+		$this->setRedirectUrl('admin/__ADMSECTION__/__MODEL_NAME_LOW__/list');
 	
-		if($instance->Destroy()){
+		if($instance->destroy()){
 			Messenger::get()->addSuccess('Запись удалена');
 			return TRUE;
 		}else{

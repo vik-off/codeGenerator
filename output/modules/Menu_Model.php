@@ -1,8 +1,11 @@
 <?php
 
-class JackItem extends GenericObject{
+class Menu_Model extends GenericObject {
 	
-	const TABLE = 'jack_items';
+	/** имя модуля */
+	const MODULE = 'menu';
+	
+	const TABLE = 'menus';
 	
 	const NOT_FOUND_MESSAGE = 'Страница не найдена';
 
@@ -10,24 +13,24 @@ class JackItem extends GenericObject{
 	/** ТОЧКА ВХОДА В КЛАСС (СОЗДАНИЕ НОВОГО ОБЪЕКТА) */
 	public static function create(){
 			
-		return new JackItem(0, self::INIT_NEW);
+		return new Menu_Model(0, self::INIT_NEW);
 	}
 	
 	/** ТОЧКА ВХОДА В КЛАСС (ЗАГРУЗКА СУЩЕСТВУЮЩЕГО ОБЪЕКТА) */
 	public static function load($id){
 		
-		return new JackItem($id, self::INIT_EXISTS);
+		return new Menu_Model($id, self::INIT_EXISTS);
 	}
 	
 	/** ТОЧКА ВХОДА В КЛАСС (ЗАГРУЗКА СУЩЕСТВУЮЩЕГО ОБЪЕКТА) */
 	public static function forceLoad($id, $fieldvalues){
 		
-		return new JackItem($id, self::INIT_EXISTS_FORCE, $fieldvalues);
+		return new Menu_Model($id, self::INIT_EXISTS_FORCE, $fieldvalues);
 	}
 	
-	/** СЛУЖЕБНЫЙ МЕТОД (получение констант из родителя) */
-	public function getConst($name){
-		return constant(__CLASS__.'::'.$name);
+	/** ПОЛУЧИТЬ ИМЯ КЛАССА */
+	public function getClass(){
+		return __CLASS__;
 	}
 	
 	/**
@@ -58,29 +61,20 @@ class JackItem extends GenericObject{
 	public function getValidator(){
 		
 		// инициализация экземпляра валидатора
-		if(is_null($this->validator)){
+		$validator = new Validator();
 		
-			$this->validator = new Validator();
-			$this->validator->rules(array(
-                'allowed' => array('index', 'title'),
-            ),
+		$validator->rules(array(),
 			array(
-                'index' => array('settype' => 'int'),
-                'title' => array('length' => array('max' => '255')),
+                'name' => array('length' => array('max' => '255')),
+                'create_date' => array('settype' => 'int'),
             ));
-			$this->validator->setFieldTitles(array(
-				'id' => 'id',
-				'index' => 'index',
-				'title' => 'Заголовок',
-			));
-		}
+		$validator->setFieldTitles(array(
+			'id' => 'id',
+			'name' => 'name',
+			'create_date' => 'create_date',
+		));
 		
-		// применение специальных правил для редактирования или добавления объекта
-		if($this->isExistsObj){
-		
-		}
-		
-		return $this->validator;
+		return $validator;
 	}
 		
 	/** ПРЕ-ВАЛИДАЦИЯ ДАННЫХ */
@@ -107,7 +101,7 @@ class JackItem extends GenericObject{
 	
 }
 
-class JackItemCollection extends GenericObjectCollection{
+class Menu_Collection extends GenericObjectCollection{
 	
 	/**
 	 * поля, по которым возможна сортировка коллекции
@@ -116,15 +110,15 @@ class JackItemCollection extends GenericObjectCollection{
 	 */
 	protected $_sortableFieldsTitles = array(
 		'id' => 'id',
-		'index' => 'index',
-		'title' => 'Заголовок',
+		'name' => 'name',
+		'create_date' => 'create_date',
 	);
 	
 	
 	/** ТОЧКА ВХОДА В КЛАСС */
-	public static function Load(){
+	public static function load(){
 			
-		$instance = new JackItemCollection();
+		$instance = new Menu_Collection();
 		return $instance;
 	}
 
@@ -132,16 +126,27 @@ class JackItemCollection extends GenericObjectCollection{
 	public function getPaginated(){
 		
 		$sorter = new Sorter('id', 'DESC', $this->_sortableFieldsTitles);
-		$paginator = new Paginator('sql', array('*', 'FROM '.JackItem::TABLE.' ORDER BY '.$sorter->getOrderBy()), 50);
+		$paginator = new Paginator('sql', array('*', 'FROM '.Menu_Model::TABLE.' ORDER BY '.$sorter->getOrderBy()), 50);
 		
 		$data = db::get()->getAll($paginator->getSql(), array());
 		
 		foreach($data as &$row)
-			$row = JackItem::forceLoad($row['id'], $row)->getAllFieldsPrepared();
+			$row = Menu_Model::forceLoad($row['id'], $row)->getAllFieldsPrepared();
 		
 		$this->_sortableLinks = $sorter->getSortableLinks();
 		$this->_pagination = $paginator->getButtons();
 		$this->_linkTags = $paginator->getLinkTags();
+		
+		return $data;
+	}
+	
+	/** ПОЛУЧИТЬ СПИСОК ВСЕХ ЭЛЕМЕНТОВ */
+	public function getAll(){
+		
+		$data = db::get()->getAllIndexed('SELECT * FROM '.Menu_Model::TABLE, 'id', array());
+		
+		foreach($data as &$row)
+			$row = Menu_Model::forceLoad($row['id'], $row)->getAllFieldsPrepared();
 		
 		return $data;
 	}

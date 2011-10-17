@@ -120,7 +120,6 @@ require('data/actions.php');
 						<th rowspan="2">Сортируемое<br /><span class="normal">(admin_list.tpl)</span></th>
 						<th colspan="4">Шаблоны</th>
 						<th rowspan="2">Тип<br /><span class="normal">(edit.tpl)</span></th>
-						<th rowspan="2">___</th>
 					</tr>
 					<tr>
 						<th>admin-list</th>
@@ -154,6 +153,8 @@ require('data/actions.php');
 					echo $s['strValidatCommonRules'];
 				}elseif(getVar($s['validatCommonRules'])){
 					echo DbStructParser::getArrStr($s['validatCommonRules'], "            ");
+				}else{
+					echo 'array()';
 				}
 			?></textarea>
 		</td>

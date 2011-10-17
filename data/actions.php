@@ -55,118 +55,19 @@ elseif($action == 'generate'){
 		trigger_error('Класс кодогенерации не найден ['.$classFile.']', E_USER_ERROR);
 	
 	require($classFile);
-	$generator = new CodeGenerator(getVar($s['template']), $s['clear-output-dir']);
-	
+	$generator = new CodeGenerator(getVar($s['template']), $s, $s['clear-output-dir']);
 	$successMsg = '';
 	
 	try{
-		
-		// сгенерировать модель
-		if(!empty($s['files']['model'])){
-			
-			$strFieldsTitles = "\n";
-			foreach($s['fieldsTitles'] as $field => $title)
-				$strFieldsTitles .= "\t\t\t\t'".$field."' => '".$title."',\n";
-				
-			$sortableFields = "\n";
-			foreach($s['sortableFields'] as $f => $true)
-				$sortableFields .= "\t\t'".$f."' => '".(isset($s['fieldsTitles'][$f]) ? $s['fieldsTitles'][$f] : $f)."',\n";
-
-			$generator->generateModel(
-				$s['modelclass'],
-				$s['tablename'],
-				$s['strValidatCommonRules'],
-				$s['strValidatIndividRules'],
-				$strFieldsTitles,
-				$sortableFields
-			);
-			$successMsg .= '<p>Файл модели сохранен!</p>';
-		}
-
-		// сгенерировать контроллер
-		if(!empty($s['files']['controller'])){
-		
-			$generator->generateController(
-				$s['controlclass'],
-				$s['modelclass']
-			);
-			$successMsg .= '<p>Файл контроллера сохранен!</p>';
-		}
-
-		// сгенерировать шаблон admin-list
-		if(!empty($s['files']['tpl-admin-list'])){
-
-			$generator->generateTplAdminList(
-				$s['modelclass'],
-				$s['fieldsTitles'],
-				$s['sortableFields'],
-				$s['tplFields']['admin-list'],
-				$s['admSection']
- 			);
-			$successMsg .= '<p>Файл Шаблона admin-list сохранен!</p>';
-		}
-
-		// сгенерировать шаблон list
-		if(!empty($s['files']['tpl-list'])){
-
-			$generator->generateTplList(
-				$s['modelclass'],
-				$s['fieldsTitles'],
-				$s['files']['tpl-list'],
-				$s['tplFields']['list'],
-				$s['admSection']
-			);
-			$successMsg .= '<p>Файл Шаблона list сохранен!</p>';
-		}
-
-		// сгенерировать шаблон view
-		if(!empty($s['files']['tpl-view'])){
-
-			$generator->generateTplView(
-				$s['modelclass'],
-				$s['fieldsTitles'],
-				$s['files']['tpl-view'],
-				$s['tplFields']['view'],
-				$s['admSection']
-			);
-			$successMsg .= '<p>Файл Шаблона view сохранен!</p>';
-		}
-
-		// сгенерировать шаблон edit
-		if(!empty($s['files']['tpl-edit'])){
-
-			$generator->generateTplEdit(
-				$s['modelclass'],
-				$s['fieldsTitles'],
-				$s['files']['tpl-edit'],
-				$s['tplFields']['edit'],
-				$s['inputTypes'],
-				$s['admSection']
-			);
-			$successMsg .= '<p>Файл Шаблона edit сохранен!</p>';
-		}
-
-		// сгенерировать шаблон delete
-		if(!empty($s['files']['tpl-delete'])){
-
-			$generator->generateTplDelete(
-				$s['modelclass'],
-				$s['fieldsTitles'],
-				$s['admSection']
-			);
-			$successMsg .= '<p>Файл Шаблона delete сохранен!</p>';
-		}
+		$successMsg = $generator->generateAll($s['files']);
+		if($successMsg)
+			$messenger->addSuccess($successMsg);
+	}
+	catch(Exception $e){
 		
 		if($successMsg)
 			$messenger->addSuccess($successMsg);
-	
-	}catch(Exception $e){
-		
-		if($successMsg)
-			$messenger->addSuccess($successMsg);
-		
 		$messenger->addError('При генерации файлов произошли ошибки:<br />'.$e->getMessage());
-	
 	}
 		
 	reload();

@@ -184,9 +184,6 @@ class DbStructParser{
 			
 			$fieldName = $row['Field'];
 			
-			// все остальные поля являются допустимыми
-			$this->_commonRules['allowed'][] = $fieldName;
-			
 			// если по умолчанию поле имеет значение NULL, но стоит флаг NOT NULL, то это поле обязательно.
 			if(strtoupper($row['Null']) == 'NO' && $row['Default'] == NULL){
 				$this->_commonRules['required'][] = $fieldName;

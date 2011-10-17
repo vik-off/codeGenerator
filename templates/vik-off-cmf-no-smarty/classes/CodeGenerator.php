@@ -2,6 +2,111 @@
 
 class CodeGenerator extends CodeGeneratorCommon{
 	
+	/** СГЕНЕРИРОВАТЬ ВСЕ НЕОБХОДИМЫЕ ФАЙЛЫ */
+	public function generateAll($files){
+		
+		$successMsg = '';
+		
+		// сгенерировать модель
+		if(!empty($files['model'])){
+			
+			$strFieldsTitles = "\n";
+			foreach($this->_data['fieldsTitles'] as $field => $title)
+				$strFieldsTitles .= "\t\t\t'".$field."' => '".$title."',\n";
+				
+			$sortableFields = "\n";
+			foreach($this->_data['sortableFields'] as $f => $true)
+				$sortableFields .= "\t\t'".$f."' => '".(isset($this->_data['fieldsTitles'][$f]) ? $this->_data['fieldsTitles'][$f] : $f)."',\n";
+
+			$this->generateModel(
+				$this->_data['modelclass'],
+				$this->_data['tablename'],
+				$this->_data['strValidatCommonRules'],
+				$this->_data['strValidatIndividRules'],
+				$strFieldsTitles,
+				$sortableFields
+			);
+			$successMsg .= '<p>Файл модели сохранен!</p>';
+		}
+
+		// сгенерировать контроллер
+		if(!empty($files['controller'])){
+		
+			$this->generateController(
+				$this->_data['controlclass'],
+				$this->_data['modelclass']
+			);
+			$successMsg .= '<p>Файл контроллера сохранен!</p>';
+		}
+
+		// сгенерировать шаблон admin-list
+		if(!empty($files['tpl-admin-list'])){
+
+			$this->generateTplAdminList(
+				$this->_data['modelclass'],
+				$this->_data['fieldsTitles'],
+				$this->_data['sortableFields'],
+				$this->_data['tplFields']['admin-list'],
+				$this->_data['admSection']
+ 			);
+			$successMsg .= '<p>Файл Шаблона admin-list сохранен!</p>';
+		}
+
+		// сгенерировать шаблон list
+		if(!empty($files['tpl-list'])){
+
+			$this->generateTplList(
+				$this->_data['modelclass'],
+				$this->_data['fieldsTitles'],
+				$files['tpl-list'],
+				$this->_data['tplFields']['list'],
+				$this->_data['admSection']
+			);
+			$successMsg .= '<p>Файл Шаблона list сохранен!</p>';
+		}
+
+		// сгенерировать шаблон view
+		if(!empty($files['tpl-view'])){
+
+			$this->generateTplView(
+				$this->_data['modelclass'],
+				$this->_data['fieldsTitles'],
+				$files['tpl-view'],
+				$this->_data['tplFields']['view'],
+				$this->_data['admSection']
+			);
+			$successMsg .= '<p>Файл Шаблона view сохранен!</p>';
+		}
+
+		// сгенерировать шаблон edit
+		if(!empty($files['tpl-edit'])){
+
+			$this->generateTplEdit(
+				$this->_data['modelclass'],
+				$this->_data['fieldsTitles'],
+				$files['tpl-edit'],
+				$this->_data['tplFields']['edit'],
+				$this->_data['inputTypes'],
+				$this->_data['admSection']
+			);
+			$successMsg .= '<p>Файл Шаблона edit сохранен!</p>';
+		}
+
+		// сгенерировать шаблон delete
+		if(!empty($files['tpl-delete'])){
+
+			$this->generateTplDelete(
+				$this->_data['modelclass'],
+				$this->_data['fieldsTitles'],
+				$this->_data['admSection']
+			);
+			$successMsg .= '<p>Файл Шаблона delete сохранен!</p>';
+		}
+		
+		return $successMsg;
+	}
+	
+	
 	// ГЕНЕРАЦИЯ МОДЕЛИ
 	public function generateModel($className, $tableName, $strValidatCommonRules, $strValidatIndividRules, $fieldTitles, $sortableFields){
 		

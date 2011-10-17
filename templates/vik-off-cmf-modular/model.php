@@ -12,6 +12,7 @@ class __CLASSNAME__ extends GenericObject {
 	/** имя модуля */
 	const MODULE = '__MODULE__';
 	
+	/** таблица БД */
 	const TABLE = '__TABLENAME__';
 	
 	const NOT_FOUND_MESSAGE = 'Страница не найдена';
@@ -72,12 +73,7 @@ class __CLASSNAME__ extends GenericObject {
 		
 		$validator->rules(__VALIDATION_COMMON__,
 			__VALIDATION_INDIVIDUAL__);
-		$validator->setFieldTitles(array(__FIELD_TITLES__			));
-		
-		// применение специальных правил для редактирования или добавления объекта
-		if($this->isExistsObj){
-		
-		}
+		$validator->setFieldTitles(array(__FIELD_TITLES__		));
 		
 		return $validator;
 	}
@@ -106,7 +102,7 @@ class __CLASSNAME__ extends GenericObject {
 	
 }
 
-class __CLASSNAME__Collection extends GenericObjectCollection{
+class __COLLECTION_CLASS__ extends GenericObjectCollection{
 	
 	/**
 	 * поля, по которым возможна сортировка коллекции
@@ -119,7 +115,7 @@ class __CLASSNAME__Collection extends GenericObjectCollection{
 	/** ТОЧКА ВХОДА В КЛАСС */
 	public static function load(){
 			
-		$instance = new __CLASSNAME__Collection();
+		$instance = new __COLLECTION_CLASS__();
 		return $instance;
 	}
 
