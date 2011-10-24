@@ -152,7 +152,7 @@ require('data/actions.php');
 				if(getVar($s['strValidatCommonRules'])){
 					echo $s['strValidatCommonRules'];
 				}elseif(getVar($s['validatCommonRules'])){
-					echo DbStructParser::getArrStr($s['validatCommonRules'], "            ");
+					echo DbStructParser::getArrStr($s['validatCommonRules'], "\t\t\t");
 				}else{
 					echo 'array()';
 				}
@@ -165,7 +165,7 @@ require('data/actions.php');
 				if(getVar($s['strValidatIndividRules'])){
 					echo $s['strValidatIndividRules'];
 				}elseif(getVar($s['validatIndividRules'])){
-					echo DbStructParser::getArrStr($s['validatIndividRules'], "            ");
+					echo DbStructParser::getArrStr($s['validatIndividRules'], "\t\t\t");
 				}
 			?></textarea>
 		</td>
@@ -181,6 +181,14 @@ require('data/actions.php');
 				}
 				?>
 			</select>
+		</td>
+	</tr><tr>
+		<td></td>
+		<td>
+			<label>
+				<input type="checkbox" name="useHtmlForm" value="1" <? if(!empty($s['useHtmlForm'])): ?>checked="checked"<? endif; ?>>
+				Использовать класс Html_Form для вывода полей форм
+			</label>
 		</td>
 	</tr><tr>
 		<td></td>

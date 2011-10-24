@@ -32,6 +32,7 @@ foreach($FIELDS_TITLES as $field => $title){
 				<a id="submit-delete" class="button" href="<?= "<?= href('admin/$ADMIN_SECTION/$MODULE/delete/'.\$this->instanceId); ?>"; ?>" title="Удалить запись">удалить</a>
 				<a id="submit-copy" class="button" href="<?= "<?= href('admin/$ADMIN_SECTION/$MODULE/copy/'.\$this->instanceId); ?>"; ?>" title="Сделать копию записи">копировать</a>
 			<?= '<? endif; ?>'; ?>
+			
 		</td>
 	</tr>
 	</table>

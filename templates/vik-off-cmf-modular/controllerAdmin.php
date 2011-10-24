@@ -69,7 +69,7 @@ class __CONTROLLERNAME__ extends Controller {
 		
 		$pageTitle = 'Создание новой страницы';
 		
-		$variables = array_merge($_POST, array(
+		$variables = array_merge(Tools::unescape($_POST), array(
 			'instanceId' => 0,
 			'pageTitle'  => $pageTitle,
 			'validation' => __MODELNAME__::create()->getValidator()->getJsRules(),
@@ -77,7 +77,7 @@ class __CONTROLLERNAME__ extends Controller {
 		
 		BackendLayout::get()
 			->prependTitle($pageTitle)
-			->setBreadcrumbs('add', array(null, $pageTitle))
+			->addBreadcrumb(array(null, $pageTitle))
 			->setContentPhpFile(self::TPL_PATH.'edit.php', $variables)
 			->render();
 	}
@@ -98,7 +98,7 @@ class __CONTROLLERNAME__ extends Controller {
 		
 		BackendLayout::get()
 			->prependTitle('Редактирование записи')
-			->setBreadcrumbs('add', array(null, 'Редактирование записи'))
+			->addBreadcrumb(array(null, 'Редактирование записи'))
 			->setContentPhpFile(self::TPL_PATH.'edit.php', $variables)
 			->render();
 	}
@@ -119,7 +119,7 @@ class __CONTROLLERNAME__ extends Controller {
 		
 		BackendLayout::get()
 			->prependTitle($pageTitle)
-			->setBreadcrumbs('add', array(null, $pageTitle))
+			->addBreadcrumb(array(null, $pageTitle))
 			->setContentPhpFile(self::TPL_PATH.'edit.php', $variables)
 			->render();
 	}
@@ -136,7 +136,7 @@ class __CONTROLLERNAME__ extends Controller {
 		
 		BackendLayout::get()
 			->prependTitle('Удаление записи')
-			->setBreadcrumbs('add', array(null, 'Удаление записи'))
+			->addBreadcrumb(array(null, 'Удаление записи'))
 			->setContentPhpFile(self::TPL_PATH.'delete.php', $variables)
 			->render();
 	}
@@ -152,13 +152,13 @@ class __CONTROLLERNAME__ extends Controller {
 		$instanceId = getVar($_POST['id'], 0, 'int');
 		$instance = new __MODELNAME__($instanceId);
 		
-		if($instance->save($_POST)){
+		if ($instance->save(Tools::unescape($_POST))) {
 			Messenger::get()->addSuccess('Запись сохранена');
 			$this->_redirectUrl = !empty($this->_redirectUrl)
 				? preg_replace('/\(%([\w\-]+)%\)/e', '$instance->getField("$1")', $this->_redirectUrl)
 				: null;
 			return TRUE;
-		}else{
+		} else {
 			Messenger::get()->addError('Не удалось сохранить запись:', $instance->getError());
 			return FALSE;
 		}
@@ -171,12 +171,12 @@ class __CONTROLLERNAME__ extends Controller {
 		$instance = __MODELNAME__::load($instanceId);
 		
 		// установить редирект на admin-list
-		$this->setRedirectUrl('admin/__ADMSECTION__/__MODULE__/list');
+		$this->setRedirectUrl('admin/__ADMSECTION__/__MODULE_URL__/list');
 	
-		if($instance->destroy()){
+		if ($instance->destroy()) {
 			Messenger::get()->addSuccess('Запись удалена');
 			return TRUE;
-		}else{
+		} else {
 			Messenger::get()->addError('Не удалось удалить запись:', $instance->getError());
 			// выполнить редирект принудительно
 			$this->forceRedirect();

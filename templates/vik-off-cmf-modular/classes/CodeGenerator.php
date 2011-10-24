@@ -36,7 +36,8 @@ class CodeGenerator extends CodeGeneratorCommon{
 			$this->generateController(
 				$this->_data['modulename'],
 				$this->_data['controlclass'],
-				$this->_data['modelclass']
+				$this->_data['modelclass'],
+				$this->_data['admSection']
 			);
 			$successMsg .= '<p>Файл контроллера сохранен!</p>';
 		}
@@ -133,6 +134,7 @@ class CodeGenerator extends CodeGeneratorCommon{
 		$placeholders = array(
 			'__MODULE__'			=> $module,
 			'__MODULE_DIR__'		=> $moduleDir,
+			'__MODULE_URL__'		=> $this->getModuleUrl($module),
 			'__CONTROLLERNAME__' 	=> $controllerName,
 			'__MODELNAME__' 	 	=> $modelName,
 			'__COLLECTION_CLASS__' 	=> str_replace('_Model', '_Collection', $modelName),
@@ -151,7 +153,7 @@ class CodeGenerator extends CodeGeneratorCommon{
 	public function generateTplAdminList($module, $fieldtitles, $sortableFields, $allowedFields, $admSection){
 		
 		$content = $this->parseHtmlTemplate('templates/'.$this->_template.'/templates/admin_list.php', array(
-			'MODULE'  		  => $module,
+			'MODULE'  		  => $this->getModuleUrl($module),
 			'FIELDS_TITLES'   => $fieldtitles,
 			'SORTABLE_FIELDS' => $sortableFields,
 			'ALLOWED_FIELDS'  => $allowedFields,
@@ -166,7 +168,7 @@ class CodeGenerator extends CodeGeneratorCommon{
 		$tpl = $type == TYPE_TABLE ? 'list_table.php' : 'list_div.php';
 		
 		$content = $this->parseHtmlTemplate('templates/'.$this->_template.'/templates/'.$tpl, array(
-			'MODULE'  		  => $module,
+			'MODULE'  		  => $this->getModuleUrl($module),
 			'FIELDS_TITLES'   => $fieldtitles,
 			'ALLOWED_FIELDS'  => $allowedFields,
 			'ADMIN_SECTION'   => $admSection,
@@ -180,7 +182,7 @@ class CodeGenerator extends CodeGeneratorCommon{
 		$tpl = $type == TYPE_TABLE ? 'view_table.php' : 'view_div.php';
 		
 		$content = $this->parseHtmlTemplate('templates/'.$this->_template.'/templates/'.$tpl, array(
-			'MODULE'  		  => $module,
+			'MODULE'  		  => $this->getModuleUrl($module),
 			'FIELDS_TITLES'   => $fieldtitles,
 			'ALLOWED_FIELDS'  => $allowedFields,
 			'ADMIN_SECTION'   => $admSection,
@@ -194,7 +196,7 @@ class CodeGenerator extends CodeGeneratorCommon{
 		$tpl = $type == TYPE_TABLE ? 'edit_table.php' : 'edit_div.php';
 		
 		$content = $this->parseHtmlTemplate('templates/'.$this->_template.'/templates/'.$tpl, array(
-			'MODULE'  		  => $module,
+			'MODULE'  		  => $this->getModuleUrl($module),
 			'FIELDS_TITLES' => $fieldtitles,
 			'ALLOWED_FIELDS' => $allowedFields,
 			'INPUT_TYPES' => $inputTypes,
@@ -207,7 +209,7 @@ class CodeGenerator extends CodeGeneratorCommon{
 	public function generateTplDelete($module, $fieldtitles, $admSection){
 		
 		$content = $this->parseHtmlTemplate('templates/'.$this->_template.'/templates/delete.php', array(
-			'MODULE'  		  => $module,
+			'MODULE'  		  => $this->getModuleUrl($module),
 			'FIELDS_TITLES'   => $fieldtitles,
 			'ADMIN_SECTION'   => $admSection,
 		));
@@ -219,17 +221,37 @@ class CodeGenerator extends CodeGeneratorCommon{
 		
 		$value = '$this->'.$name;
 		
-		switch($type){
-			case 'input-text': 		return '<input type="text" name="'.$name.'" value="<?= '.$value.'; ?>" />';
-			case 'input-password': 	return '<input type="password" name="'.$name.'" value="<?= '.$value.'; ?>" />';
-			case 'checkbox': 		return '<input type="checkbox" name="'.$name.'" value="1" <? if('.$value.'): ?>checked="checked"<? endif; ?> />';
-			case 'textarea': 		return '<textarea name="'.$name.'"><?= '.$value.'; ?></textarea>';
-			case 'wysiwyg': 		return '<textarea class="wysiwyg" name="'.$name.'"><?= '.$value.'; ?></textarea>';
-			case 'select': 			return '<select name="'.$name.'"><option value="">Выберите...</option></select>';
-			default: trigger_error('Неизвестный тип поля ввода <b>'.$type.'</b>', E_USER_ERROR);
+		if (!empty($this->_data['useHtmlForm'])) {
+			switch($type){
+				case 'input-text': 		return "<?= Html_Form::inputText(array('name' => '$name', 'value' => $value)); ?>";
+				case 'input-password': 	return "<?= Html_Form::input(array('type' => 'password', 'name' => '$name', 'value' => $value)); ?>";
+				case 'checkbox': 		return "<label><?= Html_Form::checkbox(array('name' => '$name', 'value' => '1', 'checked' => $value)); ?></label>";
+				case 'textarea': 		return "<?= Html_Form::textarea(array('name' => '$name', 'value' => $value)); ?>";
+				case 'wysiwyg': 		return "<?= Html_Form::textarea(array('class' => 'editor', 'name' => '$name', 'value' => $value)); ?>";
+				case 'select': 			return "<?= Html_Form::select(array('name' => '$name'), array('' => 'Выберите...'), $value); ?>";
+				default: trigger_error('Неизвестный тип поля ввода <b>'.$type.'</b>', E_USER_ERROR);
+				
+			}
+		
+		} else {
+			switch($type){
+				case 'input-text': 		return '<input type="text" name="'.$name.'" value="<?= '.$value.'; ?>" />';
+				case 'input-password': 	return '<input type="password" name="'.$name.'" value="<?= '.$value.'; ?>" />';
+				case 'checkbox': 		return '<input type="checkbox" name="'.$name.'" value="1" <? if('.$value.'): ?>checked="checked"<? endif; ?> />';
+				case 'textarea': 		return '<textarea name="'.$name.'"><?= '.$value.'; ?></textarea>';
+				case 'wysiwyg': 		return '<textarea class="wysiwyg" name="'.$name.'"><?= '.$value.'; ?></textarea>';
+				case 'select': 			return '<select name="'.$name.'"><option value="">Выберите...</option></select>';
+				default: trigger_error('Неизвестный тип поля ввода <b>'.$type.'</b>', E_USER_ERROR);
+			}
 		}
+		
 	}
 	
+	public function getModuleUrl($module){
+	
+		return strtolower(preg_replace('/([^\s])([A-Z])/', '\1-\2', $module));
+	}
+
 }
 
 ?>

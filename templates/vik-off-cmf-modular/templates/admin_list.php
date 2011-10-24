@@ -23,7 +23,7 @@
 		if(!empty($ALLOWED_FIELDS[$field]))
 			echo "\t\t<td><?= \$item['".$field."']; ?></td>\r\n"; ?>
 			
-		<td class="center">
+		<td class="center" style="width: 90px;">
 			<div class="tr-hover-visible options">
 				<a href="<?= "<?= href('$MODULE/view/'.\$item['id']); ?>"; ?>" title="Просмотреть"><img src="images/backend/icon-view.png" alt="Просмотреть" /></a>
 				<a href="<?= "<?= href('admin/$ADMIN_SECTION/$MODULE/edit/'.\$item['id']); ?>"; ?>" title="Редактировать"><img src="images/backend/icon-edit.png" alt="Редактировать" /></a>

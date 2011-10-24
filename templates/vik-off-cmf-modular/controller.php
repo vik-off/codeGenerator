@@ -2,6 +2,7 @@
 %%%		__MODULE__
 %%%		__CONTROLLERNAME__
 %%%		__MODELNAME__
+%%%		__COLLECTION_CLASS__
 <?php
 
 class __CONTROLLERNAME__ extends Controller {

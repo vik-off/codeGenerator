@@ -1,6 +1,6 @@
 <?
 
-class CodeGeneratorCommon{
+class CodeGeneratorCommon {
 	
 	
 	protected $_template = null;

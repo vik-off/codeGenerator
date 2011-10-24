@@ -25,7 +25,7 @@ class DbStructParser{
 	private $_commonRules = array();
 	
 	// набор индивидуальных правил
-	private $_IndividualRules = array();
+	private $_individualRules = array();
 	
 	private $_isRulesMaked = FALSE;
 	
@@ -73,7 +73,7 @@ class DbStructParser{
 		if(!$this->_isRulesMaked)
 			$this->makeRules();
 	
-		return $this->_IndividualRules;
+		return $this->_individualRules;
 	}
 	
 	// ПРЕОБРАЗОВАТЬ СТРОКУ CREATE TABLE В МАССИВ
@@ -183,6 +183,7 @@ class DbStructParser{
 				continue;
 			
 			$fieldName = $row['Field'];
+			$this->_individualRules[$fieldName] = array();
 			
 			// если по умолчанию поле имеет значение NULL, но стоит флаг NOT NULL, то это поле обязательно.
 			if(strtoupper($row['Null']) == 'NO' && $row['Default'] == NULL){
@@ -204,53 +205,55 @@ class DbStructParser{
 				switch($colType){
 					
 				case 'TINYINT': case 'SMALLINT': case 'MEDIUMINT': case 'INT': case 'INTEGER': case 'BIGINT':
-					$this->_IndividualRules[$fieldName]['settype'] = 'int';
+					$this->_individualRules[$fieldName]['settype'] = 'int';
 					break;
 				
 				case 'FLOAT': case 'DOUBLE': case 'REAL': case 'DECIMAL': case 'DEC': case 'NUMERIC': 
-					$this->_IndividualRules[$fieldName]['settype'] = 'float';
+					$this->_individualRules[$fieldName]['settype'] = 'float';
 					break;
 				
 				case 'DATE':
-					if($isRequired)
-						$this->_IndividualRules[$fieldName]['dbDate'] =  TRUE;
+					$this->_individualRules[$fieldName]['dbDate'] =  TRUE;
 					break;
 				
 				case 'TIME':
-					if($isRequired)
-						$this->_IndividualRules[$fieldName]['dbTime'] = TRUE;
+					$this->_individualRules[$fieldName]['dbTime'] = TRUE;
 					break;
 				
 				case 'DATETIME':
-					if($isRequired)
-						$this->_IndividualRules[$fieldName]['dbDateTime'] = TRUE;
+					$this->_individualRules[$fieldName]['dbDateTime'] = TRUE;
 					break;
 				
 				case 'VARCHAR': case 'CHAR':
-					// $this->_IndividualRules[$fieldName]['safe'] = TRUE;
-					$this->_IndividualRules[$fieldName]['length'] = array('max' => $colLength);
+					$this->_individualRules[$fieldName]['strip_tags'] = TRUE;
+					$this->_individualRules[$fieldName]['length'] = array('max' => $colLength);
 					break;
 				
 				case 'TINYTEXT': case 'TINYBLOB':
-					// $this->_IndividualRules[$fieldName]['safe'] = TRUE;
-					$this->_IndividualRules[$fieldName]['length'] = array('max' => 255);
+					$this->_individualRules[$fieldName]['strip_tags'] = TRUE;
+					$this->_individualRules[$fieldName]['length'] = array('max' => 255);
 					break;
 				
 				case 'TEXT': case 'BLOB':
-					// $this->_IndividualRules[$fieldName]['safe'] = TRUE;
-					$this->_IndividualRules[$fieldName]['length'] = array('max' => 65535);
+					$this->_individualRules[$fieldName]['strip_tags'] = TRUE;
+					$this->_individualRules[$fieldName]['length'] = array('max' => 65535);
 					break;
 				
 				case 'MEDIUMTEXT': case 'MEDIUMBLOB':
-					// $this->_IndividualRules[$fieldName]['safe'] = TRUE;
-					$this->_IndividualRules[$fieldName]['length'] = array('max' => 16777215);
+					$this->_individualRules[$fieldName]['strip_tags'] = TRUE;
+					$this->_individualRules[$fieldName]['length'] = array('max' => 16777215);
 					break;
 				
 				case 'LONGTEXT': case 'LONGBLOB':
-					// $this->_IndividualRules[$fieldName]['safe'] = TRUE;
-					$this->_IndividualRules[$fieldName]['length'] = array('max' => 4294967295);
+					$this->_individualRules[$fieldName]['strip_tags'] = TRUE;
+					$this->_individualRules[$fieldName]['length'] = array('max' => 4294967295);
+					break;
+				
+				case 'BOOLEAN':
+					$this->_individualRules[$fieldName]['checkbox'] = array('on' => TRUE, 'off' => FALSE);
 					break;
 				}
+				
 			}
 		}
 		
@@ -263,7 +266,7 @@ class DbStructParser{
 		$output = '';
 		
 		$lf = "\r\n";
-		$t = "    ";
+		$t = "\t";
 		
 		$output = 'array('.$lf;
 
@@ -279,25 +282,8 @@ class DbStructParser{
 				if(!is_int($rule))
 					$ruleStr .= "'".$rule."' => ";
 
-				if(is_array($params)){
-
-					$ruleParamsArr = array();
-					foreach($params as $k => $v)
-						$ruleParamsArr[] = "'".$k."' => '".$v."'";
-					$ruleStr .= "array(".implode(", ", $ruleParamsArr).")";
+				$ruleStr .= self::_val2str($params);
 				
-				}elseif(is_bool($params)){
-					
-					$ruleStr .= $params ? 'TRUE' : 'FALSE';
-				
-				}elseif(is_numeric($params)){
-					
-					$ruleStr .= $params;
-				
-				}else{
-					
-					$ruleStr .= "'".$params."'";
-				}
 				$rulesArr[] = $ruleStr;
 			}
 			$output .= implode(", ", $rulesArr)."),".$lf;
@@ -305,6 +291,30 @@ class DbStructParser{
 		$output .= $rowPrefix.')';
 		
 		return $output;
+	}
+	
+	private static function _val2str($val){
+		
+			if(is_numeric($val)) {
+			
+				return $val;
+			} elseif (is_array($val)) {
+
+				$ruleParamsArr = array();
+				foreach($val as $k => $v)
+					$ruleParamsArr[] = "'".$k."' => ".self::_val2str($v);
+					
+				return "array(".implode(", ", $ruleParamsArr).")";
+			} elseif(is_bool($val)) {
+				
+				return $val ? 'TRUE' : 'FALSE';
+			} elseif(is_null($val)) {
+				
+				return 'NULL';
+			} else {
+				
+				return "'".$val."'";
+			}
 	}
 	
 }

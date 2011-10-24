@@ -7,7 +7,7 @@
 %%%		__FIELD_TITLES__
 <?php
 
-class __CLASSNAME__ extends GenericObject {
+class __CLASSNAME__ extends ActiveRecord {
 	
 	/** имя модуля */
 	const MODULE = '__MODULE__';
@@ -69,10 +69,10 @@ class __CLASSNAME__ extends GenericObject {
 	public function getValidator(){
 		
 		// инициализация экземпляра валидатора
-		$validator = new Validator();
+		$validator = new Validator(__VALIDATION_INDIVIDUAL__,
+			__VALIDATION_COMMON__
+		);
 		
-		$validator->rules(__VALIDATION_COMMON__,
-			__VALIDATION_INDIVIDUAL__);
 		$validator->setFieldTitles(array(__FIELD_TITLES__		));
 		
 		return $validator;
@@ -102,7 +102,7 @@ class __CLASSNAME__ extends GenericObject {
 	
 }
 
-class __COLLECTION_CLASS__ extends GenericObjectCollection{
+class __COLLECTION_CLASS__ extends ARCollection{
 	
 	/**
 	 * поля, по которым возможна сортировка коллекции
@@ -115,8 +115,7 @@ class __COLLECTION_CLASS__ extends GenericObjectCollection{
 	/** ТОЧКА ВХОДА В КЛАСС */
 	public static function load(){
 			
-		$instance = new __COLLECTION_CLASS__();
-		return $instance;
+		return new __COLLECTION_CLASS__();
 	}
 
 	/** ПОЛУЧИТЬ СПИСОК С ПОСТРАНИЧНОЙ РАЗБИВКОЙ */

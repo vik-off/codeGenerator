@@ -27,6 +27,7 @@ if($action == 'saveData'){
 	$s['sortableFields'] = (array)$_POST['sortableFields'];
 	$s['tplFields'] 	 = (array)$_POST['tplFields'];
 	$s['inputTypes'] 	 = (array)$_POST['inputTypes'];
+	$s['useHtmlForm'] 	 = !empty($_POST['useHtmlForm']);
 	
 	
 	Storage::get(GEN_TYPE)->save();
