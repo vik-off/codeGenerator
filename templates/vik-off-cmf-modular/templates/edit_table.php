@@ -22,8 +22,8 @@ foreach($FIELDS_TITLES as $field => $title){
 }
 ?>
 
-	<tr id="submit-box">
-		<td class="actions" colspan="2">
+	<tr>
+		<td id="submit-box" class="actions" colspan="2">
 			<input id="submit-save" class="button" type="submit" name="action[admin/<?=$MODULE;?>/save][admin/<?=$ADMIN_SECTION;?>/<?=$MODULE;?>/list]" value="Сохранить" title="Созхранить изменения и вернуться к списку" />
 			<input id="submit-apply" class="button" type="submit" name="action[admin/<?=$MODULE;?>/save][admin/<?=$ADMIN_SECTION;?>/<?=$MODULE;?>/edit/<?= '<?= $this->instanceId ? $this->instanceId : \'(%id%)\' ; ?>'; ?>]" value="Применить" title="Сохранить изменения и продолжить редактирование" />
 			<a id="submit-cancel" class="button" href="<?= "<?= href('admin/$ADMIN_SECTION/$MODULE/list'); ?>"; ?>" title="Отменить все изменения и вернуться к списку">отмена</a>
