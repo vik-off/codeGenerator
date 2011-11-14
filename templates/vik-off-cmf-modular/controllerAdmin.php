@@ -47,8 +47,8 @@ class __CONTROLLERNAME__ extends Controller {
 	////// DISPLAY //////
 	/////////////////////
 	
-	/** DISPLAY LIST (ADMIN) */
-	public function display_list($params = array()){
+	/** DISPLAY LIST */
+	public function display_list(){
 		
 		$collection = new __COLLECTION_CLASS__();
 		$variables = array(
@@ -64,8 +64,8 @@ class __CONTROLLERNAME__ extends Controller {
 			->render();
 	}
 	
-	/** DISPLAY NEW (ADMIN) */
-	public function display_new($params = array()){
+	/** DISPLAY NEW */
+	public function display_new(){
 		
 		$pageTitle = 'Создание новой страницы';
 		
@@ -82,10 +82,10 @@ class __CONTROLLERNAME__ extends Controller {
 			->render();
 	}
 	
-	/** DISPLAY EDIT (ADMIN) */
-	public function display_edit($params = array()){
+	/** DISPLAY EDIT */
+	public function display_edit($uid = null){
 		
-		$instanceId = getVar($params[0], 0 ,'int');
+		$instanceId = (int)$uid;
 		$instance = __MODELNAME__::load($instanceId);
 		
 		$pageTitle = '<span style="font-size: 14px;">Редактирование элемента</span> #'.$instance->getField('id');
@@ -103,10 +103,10 @@ class __CONTROLLERNAME__ extends Controller {
 			->render();
 	}
 	
-	/** DISPLAY COPY (ADMIN) */
-	public function display_copy($params = array()){
+	/** DISPLAY COPY */
+	public function display_copy($uid = null){
 		
-		$instanceId = getVar($params[0], 0 ,'int');
+		$instanceId = (int)$uid;
 		$instance = __MODELNAME__::load($instanceId);
 		
 		$pageTitle = 'Копирование записи';
@@ -124,10 +124,10 @@ class __CONTROLLERNAME__ extends Controller {
 			->render();
 	}
 	
-	/** DISPLAY DELETE (ADMIN) */
-	public function display_delete($params = array()){
+	/** DISPLAY DELETE */
+	public function display_delete($uid = null){
 		
-		$instanceId = getVar($params[0], 0 ,'int');
+		$instanceId = (int)$uid;
 		$instance = __MODELNAME__::load($instanceId);
 
 		$variables = array_merge($instance->GetAllFieldsPrepared(), array(
@@ -146,13 +146,14 @@ class __CONTROLLERNAME__ extends Controller {
 	////// ACTION //////
 	////////////////////
 	
-	/** ACTION SAVE (ADMIN) */
-	public function action_save($params = array()){
+	/** ACTION SAVE */
+	public function action_save(){
 		
 		$instanceId = getVar($_POST['id'], 0, 'int');
 		$instance = new __MODELNAME__($instanceId);
+		$saveMode = $instance->isNewObj ? __MODELNAME__::SAVE_CREATE : __MODELNAME__::SAVE_EDIT;
 		
-		if ($instance->save(Tools::unescape($_POST))) {
+		if ($instance->save(Tools::unescape($_POST), $saveMode)) {
 			Messenger::get()->addSuccess('Запись сохранена');
 			$this->_redirectUrl = !empty($this->_redirectUrl)
 				? preg_replace('/\(%([\w\-]+)%\)/e', '$instance->getField("$1")', $this->_redirectUrl)
@@ -164,8 +165,8 @@ class __CONTROLLERNAME__ extends Controller {
 		}
 	}
 	
-	/** ACTION DELETE (ADMIN) */
-	public function action_delete($params = array()){
+	/** ACTION DELETE */
+	public function action_delete(){
 		
 		$instanceId = getVar($_POST['id'], 0, 'int');
 		$instance = __MODELNAME__::load($instanceId);

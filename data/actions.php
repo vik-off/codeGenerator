@@ -20,7 +20,6 @@ if($action == 'saveData'){
 	
 	$s['admSection']    = trim($_POST['admSection']);
 	
-	$s['strValidatCommonRules']  = trim($_POST['validatCommonRules']);
 	$s['strValidatIndividRules'] = trim($_POST['validatIndividRules']);
 	
 	$s['fieldsTitles'] 	 = (array)$_POST['fieldsTitles'];
@@ -92,7 +91,6 @@ elseif($action == 'db-parse-create'){
 			$parser = new DbStructParser($str, DbStructParser::SRC_CREATE);
 			
 			$s['tableStruct'] = $parser->getStructure();
-			$s['validatCommonRules'] = $parser->getCommonRules();
 			$s['validatIndividRules'] = $parser->getIndividualRules();
 			
 			if(!getVar($s['tablename']) && !is_null($parser->getTableName()))
@@ -133,7 +131,6 @@ elseif($action == 'db-eval-describe'){
 		try{
 			$parser = new DbStructParser($str, DbStructParser::SRC_DESCRIBE_EVAL);
 			$s['tableStruct'] = $parser->getStructure();
-			$s['validatCommonRules'] = $parser->getCommonRules();
 			$s['validatIndividRules'] = $parser->getIndividualRules();
 
 			Storage::get(GEN_TYPE)->save();

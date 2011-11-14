@@ -22,7 +22,6 @@ class CodeGenerator extends CodeGeneratorCommon{
 				$this->_data['modulename'],
 				$this->_data['modelclass'],
 				$this->_data['tablename'],
-				$this->_data['strValidatCommonRules'],
 				$this->_data['strValidatIndividRules'],
 				$strFieldsTitles,
 				$sortableFields
@@ -110,18 +109,23 @@ class CodeGenerator extends CodeGeneratorCommon{
 	}
 	
 	// ГЕНЕРАЦИЯ МОДЕЛИ
-	public function generateModel($module, $modelName, $tableName, $strValidatCommonRules, $strValidatIndividRules, $fieldTitles, $sortableFields){
+	public function generateModel($module, $modelName, $tableName, $strValidatIndividRules, $fieldTitles, $sortableFields){
 		
+		$validationFields = eval('return array_keys('.$strValidatIndividRules.');');
+		foreach($validationFields as &$f)
+			$f = "'".$f."'";
+		$validationFieldsStr = implode(", ", $validationFields);
 		$placeholders = array(
 			'__MODULE__'				=> $module,
 			'__CLASSNAME__' 			=> $modelName,
-			'__COLLECTION_CLASS__' 		=> str_replace('_Model', '_Collection', $modelName),
+			'__COLLECTION_CLASS__' 		=> preg_replace('/Model$/', 'Collection', $modelName),
 			'__TABLENAME__' 			=> $tableName,
-			'__VALIDATION_COMMON__' 	=> $strValidatCommonRules,
+			'__VALIDATION_FIELDS__'		=> $validationFieldsStr,
 			'__VALIDATION_INDIVIDUAL__'	=> $strValidatIndividRules,
 			'__FIELD_TITLES__' 			=> $fieldTitles,
 			'__SORTABLE_FIELDS__'		=> $sortableFields,
 		);
+		
 		$content = $this->parsePhpTemplate('templates/'.$this->_template.'/model.php', $placeholders);
 		$this->createFile('output/modules/'.ucfirst($module).'/', $modelName.'.php', $content);
 	}
@@ -137,13 +141,13 @@ class CodeGenerator extends CodeGeneratorCommon{
 			'__MODULE_URL__'		=> $this->getModuleUrl($module),
 			'__CONTROLLERNAME__' 	=> $controllerName,
 			'__MODELNAME__' 	 	=> $modelName,
-			'__COLLECTION_CLASS__' 	=> str_replace('_Model', '_Collection', $modelName),
+			'__COLLECTION_CLASS__' 	=> preg_replace('/Model$/', 'Collection', $modelName),
 			'__ADMSECTION__'		=> $admSection,
 		);
 		$content = $this->parsePhpTemplate('templates/'.$this->_template.'/controller.php', $placeholders);
 		$this->createFile('output/modules/'.ucfirst($this->_data['modulename']).'/', $controllerName.'.php', $content);
 		
-		$adminControllerName = str_replace('_Controller', '_AdminController', $controllerName);
+		$adminControllerName = preg_replace('/Controller$/', 'AdminController', $controllerName);
 		$placeholders['__CONTROLLERNAME__'] = $adminControllerName;
 		$contentAdmin = $this->parsePhpTemplate('templates/'.$this->_template.'/controllerAdmin.php', $placeholders);
 		$this->createFile('output/modules/'.$moduleDir.'/', $adminControllerName.'.php', $contentAdmin);

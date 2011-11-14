@@ -79,7 +79,7 @@ class DbStructParser{
 	// ПРЕОБРАЗОВАТЬ СТРОКУ CREATE TABLE В МАССИВ
 	public function parse_tableCreateRow($tableCreateRow){
 		
-		$tableCreateRow = trim(preg_replace('/\s+/', ' ', $tableCreateRow));
+		$tableCreateRow = trim(preg_replace('/\s+/', ' ', trim($tableCreateRow)));
 			
 		$fieldsDefStr = '';
 		
@@ -187,7 +187,7 @@ class DbStructParser{
 			
 			// если по умолчанию поле имеет значение NULL, но стоит флаг NOT NULL, то это поле обязательно.
 			if(strtoupper($row['Null']) == 'NO' && $row['Default'] == NULL){
-				$this->_commonRules['required'][] = $fieldName;
+				$this->_individualRules[$fieldName]['required'] = TRUE;
 				$isRequired = TRUE;
 			}else{
 				$isRequired = FALSE;

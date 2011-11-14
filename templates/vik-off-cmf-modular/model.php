@@ -15,6 +15,10 @@ class __CLASSNAME__ extends ActiveRecord {
 	/** таблица БД */
 	const TABLE = '__TABLENAME__';
 	
+	/** типы сохранения */
+	const SAVE_CREATE   = 'create';
+	const SAVE_EDIT     = 'edit';
+	
 	const NOT_FOUND_MESSAGE = 'Страница не найдена';
 
 	
@@ -66,12 +70,29 @@ class __CLASSNAME__ extends ActiveRecord {
 	}
 	
 	/** ПОЛУЧИТЬ ЭКЗЕМПЛЯР ВАЛИДАТОРА */
-	public function getValidator(){
+	public function getValidator($mode = self::SAVE_CREATE){
 		
-		// инициализация экземпляра валидатора
-		$validator = new Validator(__VALIDATION_INDIVIDUAL__,
-			__VALIDATION_COMMON__
-		);
+		$rules = __VALIDATION_INDIVIDUAL__;
+		
+		$fields = array();
+		switch($mode) {
+			
+			case self::SAVE_CREATE:
+				$fields = array(__VALIDATION_FIELDS__);
+				break;
+			
+			case self::SAVE_EDIT:
+				$fields = array(__VALIDATION_FIELDS__);
+				break;
+			
+			default: trigger_error('Неверный ключ валидатора', E_USER_ERROR);
+		}
+		
+		$fieldsRules = array();
+		foreach($fields as $f)
+			$fieldsRules[$f] = $rules[$f];
+			
+		$validator = new Validator($fieldsRules);
 		
 		$validator->setFieldTitles(array(__FIELD_TITLES__		));
 		

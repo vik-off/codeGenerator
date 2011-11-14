@@ -43,7 +43,7 @@ class __CONTROLLERNAME__ extends Controller {
 	/////////////////////
 	
 	/** DISPLAY LIST */
-	public function display_list($params = array()){
+	public function display_list(){
 		
 		$collection = new __COLLECTION_CLASS__();
 		$variables = array(
@@ -60,9 +60,9 @@ class __CONTROLLERNAME__ extends Controller {
 	}
 	
 	/** DISPLAY VIEW */
-	public function display_view($params = array()){
+	public function display_view($uid = null){
 		
-		$instanceId = getVar($params[0], 0, 'int');
+		$instanceId = (int)$uid;
 		
 		$variables = __MODELNAME__::load($instanceId)->GetAllFieldsPrepared();
 		FrontendLayout::get()

@@ -19,7 +19,7 @@
 			<?= '<?= FORMCODE; ?>'; ?>
 			
 			<input class="button" type="submit" name="action[admin/<?=$MODULE;?>/delete]" value="Удалить" />
-			<a class="button" href="<?= "<?= href('admin/$ADMIN_SECTION/$MODULE'); ?>"; ?>">Отмена</a>
+			<a class="button" href="<?= "<?= href('admin/$ADMIN_SECTION'); ?>"; ?>">Отмена</a>
 		</form>
 	</div>
 	

@@ -46,6 +46,7 @@ require('data/actions.php');
 		var module = ge('modulename').value;
 		ge('modelclass').value = capitalize(module) + '_Model';
 		ge('controlclass').value = capitalize(module) + '_Controller';
+		ge('admsection').value = 'content/' + module;
 	}
 	
 	document.body.onload = function(){
@@ -54,7 +55,7 @@ require('data/actions.php');
 		ge('modulename').onkeyup = moduleNameEdit;
 	
 		ge('modelclass').onkeyup = function(){
-			ge('controlclass').value = this.value.replace('_Model', '_Controller');
+			ge('controlclass').value = this.value.replace('Model', '`Controller');
 		}
 		
 	}
@@ -108,7 +109,7 @@ require('data/actions.php');
 		<td><input id="controlclass" type="text" name="controlclass" value="<?=getVar($s['controlclass']);?>"></td>
 	</tr><tr>
 		<td>Раздел адм. панели</td>
-		<td><input type="text" name="admSection" value="<?=getVar($s['admSection'], 'content');?>"></td>
+		<td><input id="admsection" type="text" name="admSection" value="<?=getVar($s['admSection'], 'content');?>"></td>
 	</tr><tr>
 		<td>Поля</td>
 		<td>
@@ -146,26 +147,13 @@ require('data/actions.php');
 			<? endif; ?>
 		</td>
 	</tr><tr>
-		<td>Общие правила<br />валидации<br /></td>
-		<td>
-			<textarea name="validatCommonRules" style="width: 900px; height: 75px;"><?
-				if(getVar($s['strValidatCommonRules'])){
-					echo $s['strValidatCommonRules'];
-				}elseif(getVar($s['validatCommonRules'])){
-					echo DbStructParser::getArrStr($s['validatCommonRules'], "\t\t\t");
-				}else{
-					echo 'array()';
-				}
-			?></textarea>
-		</td>
-	</tr><tr>
-		<td>Индивидуальные<br />правила валидации<br /></td>
+		<td>Правила валидации<br /></td>
 		<td>
 			<textarea name="validatIndividRules" style="width: 900px; height: 150px;"><?
 				if(getVar($s['strValidatIndividRules'])){
 					echo $s['strValidatIndividRules'];
 				}elseif(getVar($s['validatIndividRules'])){
-					echo DbStructParser::getArrStr($s['validatIndividRules'], "\t\t\t");
+					echo DbStructParser::getArrStr($s['validatIndividRules'], "\t\t");
 				}
 			?></textarea>
 		</td>
@@ -216,7 +204,7 @@ require('data/actions.php');
 			<b style="font-size: 16px;">Model</b>
 			<div class="<?=!empty($s['modelclass']) ? 'green' : 'red'; ?>">Имя модели</div>
 			<div class="<?=!empty($s['tablename']) ? 'green' : 'red'; ?>">Имя таблицы БД</div>
-			<div class="<?=!empty($s['strValidatCommonRules']) && !empty($s['strValidatIndividRules']) ? 'green' : ''; ?>">Правила валидации</div>
+			<div class="<?=!empty($s['strValidatIndividRules']) ? 'green' : ''; ?>">Правила валидации</div>
 		</td><td>
 			<b style="font-size: 16px;">Controller</b><br />
 			<div class="<?=strlen($s['controlclass']) > 10 ? 'green' : 'red'; ?>">Имя контроллера</div>
