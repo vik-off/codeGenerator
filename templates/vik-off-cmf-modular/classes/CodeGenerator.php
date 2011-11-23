@@ -35,10 +35,23 @@ class CodeGenerator extends CodeGeneratorCommon{
 			$this->generateController(
 				$this->_data['modulename'],
 				$this->_data['controlclass'],
+				$this->_data['admcontrolclass'],
 				$this->_data['modelclass'],
 				$this->_data['admSection']
 			);
 			$successMsg .= '<p>Файл контроллера сохранен!</p>';
+		}
+
+		// сгенерировать конфиг
+		if(!empty($files['config'])){
+		
+			$this->generateConfig(
+				$this->_data['modulename'],
+				$this->_data['moduletitle'],
+				$this->_data['controlclass'],
+				$this->_data['admcontrolclass']
+			);
+			$successMsg .= '<p>Файл config сохранен!</p>';
 		}
 
 		// сгенерировать шаблон admin-list
@@ -131,7 +144,7 @@ class CodeGenerator extends CodeGeneratorCommon{
 	}
 
 	// ГЕНЕРАЦИЯ КОНТРОЛЛЕРА
-	public function generateController($module, $controllerName, $modelName, $admSection){
+	public function generateController($module, $controllerName, $adminControllerName, $modelName, $admSection){
 		
 		$moduleDir = ucfirst($module);
 		
@@ -147,10 +160,24 @@ class CodeGenerator extends CodeGeneratorCommon{
 		$content = $this->parsePhpTemplate('templates/'.$this->_template.'/controller.php', $placeholders);
 		$this->createFile('output/modules/'.ucfirst($this->_data['modulename']).'/', $controllerName.'.php', $content);
 		
-		$adminControllerName = preg_replace('/Controller$/', 'AdminController', $controllerName);
 		$placeholders['__CONTROLLERNAME__'] = $adminControllerName;
 		$contentAdmin = $this->parsePhpTemplate('templates/'.$this->_template.'/controllerAdmin.php', $placeholders);
 		$this->createFile('output/modules/'.$moduleDir.'/', $adminControllerName.'.php', $contentAdmin);
+	}
+	
+	
+	// ГЕНЕРАЦИЯ КОНФИГА
+	public function generateConfig($module, $moduleTitle, $controllerName, $adminControllerName){
+		
+		$placeholders = array(
+			'__MODULE__'				=> $module,
+			'__MODULE_TITLE__'			=> $moduleTitle,
+			'__CONTROLLERNAME__' 		=> $controllerName,
+			'__ADM_CONTROLLERNAME__' 	=> $adminControllerName,
+		);
+		
+		$content = $this->parsePhpTemplate('templates/'.$this->_template.'/config.php', $placeholders);
+		$this->createFile('output/modules/'.ucfirst($module).'/', 'config.php', $content);
 	}
 	
 	// ГЕНЕРАЦИЯ ШАБЛОНА ADMIN-LIST

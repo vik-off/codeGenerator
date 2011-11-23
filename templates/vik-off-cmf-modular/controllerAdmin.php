@@ -170,17 +170,12 @@ class __CONTROLLERNAME__ extends Controller {
 		
 		$instanceId = getVar($_POST['id'], 0, 'int');
 		$instance = __MODELNAME__::load($instanceId);
-		
-		// установить редирект на admin-list
-		$this->setRedirectUrl('admin/__ADMSECTION__/__MODULE_URL__/list');
 	
 		if ($instance->destroy()) {
 			Messenger::get()->addSuccess('Запись удалена');
 			return TRUE;
 		} else {
 			Messenger::get()->addError('Не удалось удалить запись:', $instance->getError());
-			// выполнить редирект принудительно
-			$this->forceRedirect();
 			return FALSE;
 		}
 

@@ -35,18 +35,25 @@ require('data/actions.php');
 	
 	function capitalize(string){return string.charAt(0).toUpperCase() + string.slice(1);}
 	
+	function module2url(name){
+		return name.replace(/([A-Z])/g, "-$1").toLowerCase();
+	}
+	
 	function tblNameEdit(){
 		var table = ge('tablename').value.toLowerCase();
 		ge('modulename').value = table;
 		ge('modelclass').value = capitalize(table) + '_Model';
 		ge('controlclass').value = capitalize(table) + '_Controller';
+		ge('admcontrolclass').value = capitalize(table) + '_AdminController';
 	}
 	
 	function moduleNameEdit(){
 		var module = ge('modulename').value;
 		ge('modelclass').value = capitalize(module) + '_Model';
 		ge('controlclass').value = capitalize(module) + '_Controller';
-		ge('admsection').value = 'content/' + module;
+		ge('admcontrolclass').value = capitalize(module) + '_AdminController';
+		ge('frontsection').value = module2url(module);
+		ge('admsection').value = 'content/' + module2url(module);
 	}
 	
 	document.body.onload = function(){
@@ -55,7 +62,8 @@ require('data/actions.php');
 		ge('modulename').onkeyup = moduleNameEdit;
 	
 		ge('modelclass').onkeyup = function(){
-			ge('controlclass').value = this.value.replace('Model', '`Controller');
+			ge('controlclass').value = this.value.replace('Model', 'Controller');
+			ge('admcontrolclass').value = this.value.replace('Model', 'AdminController');
 		}
 		
 	}
@@ -108,8 +116,17 @@ require('data/actions.php');
 		<td>Класс контроллера</td>
 		<td><input id="controlclass" type="text" name="controlclass" value="<?=getVar($s['controlclass']);?>"></td>
 	</tr><tr>
-		<td>Раздел адм. панели</td>
-		<td><input id="admsection" type="text" name="admSection" value="<?=getVar($s['admSection'], 'content');?>"></td>
+		<td>Класс контроллера</td>
+		<td><input id="admcontrolclass" type="text" name="admcontrolclass" value="<?=getVar($s['admcontrolclass']);?>"></td>
+	</tr><tr>
+		<td>Заголовок модуля</td>
+		<td><input id="moduletitle" type="text" name="moduletitle" value="<?=getVar($s['moduletitle']);?>"></td>
+	</tr><tr>
+		<td>Раздел фронтенда</td>
+		<td><input id="frontsection" type="text" name="frontsection" value="<?=getVar($s['frontsection']);?>"></td>
+	</tr><tr>
+		<td>Раздел бекенда</td>
+		<td><input id="admsection" type="text" name="admSection" value="<?=getVar($s['admSection']);?>"></td>
 	</tr><tr>
 		<td>Поля</td>
 		<td>
@@ -149,26 +166,13 @@ require('data/actions.php');
 	</tr><tr>
 		<td>Правила валидации<br /></td>
 		<td>
-			<textarea name="validatIndividRules" style="width: 900px; height: 150px;"><?
+			<textarea name="strValidatIndividRules" style="width: 900px; height: 150px;"><?
 				if(getVar($s['strValidatIndividRules'])){
 					echo $s['strValidatIndividRules'];
 				}elseif(getVar($s['validatIndividRules'])){
 					echo DbStructParser::getArrStr($s['validatIndividRules'], "\t\t");
 				}
 			?></textarea>
-		</td>
-	</tr><tr>
-		<td>Шаблон</td>
-		<td>
-			<select name="template">
-				<option value="">Выберите...</option>
-				<?
-				foreach(file('./templates/templates.txt') as $t){
-					$t = trim($t);
-					echo '<option value="'.$t.'" '.(getVar($s['template']) == $t ? 'selected="selected"' : '').'>'.$t.'</option>';
-				}
-				?>
-			</select>
 		</td>
 	</tr><tr>
 		<td></td>
@@ -195,7 +199,7 @@ require('data/actions.php');
 
 	<table border="1" style="font-size: 12px; margin: auto;">
 	<tr>
-		<td colspan="3" align="center">
+		<td colspan="4" align="center">
 			<div class="<?=strlen($s['template']) ? 'green' : 'red'; ?>">Шаблон</div>
 		</td>
 	</tr>
@@ -210,6 +214,8 @@ require('data/actions.php');
 			<div class="<?=strlen($s['controlclass']) > 10 ? 'green' : 'red'; ?>">Имя контроллера</div>
 			<div class="<?=!empty($s['modelclass']) ? 'green' : 'red'; ?>">Имя модели</div>
 		</td><td>
+			<b style="font-size: 16px;">Config</b>
+		</td><td>
 			<b style="font-size: 16px;">Templates</b><br />
 			<div class="green">Заголовки полей</div>
 		</td>
@@ -219,14 +225,16 @@ require('data/actions.php');
 			<? if(!empty($s['modelclass']) && 
 				  !empty($s['template']) &&
 				  !empty($s['tablename'])): ?>
-				<p><input id="model-generate" type="checkbox" name="files[model]" value="1" <?=(getVar($s['files']['model']) ? 'checked="checked"' : '');?> /> <label for="model-generate">Сгенерировать</label></p>
+				<p><label><input type="checkbox" name="files[model]" value="1" <?=(getVar($s['files']['model']) ? 'checked="checked"' : '');?> /> Сгенерировать</label></p>
 			<? endif; ?>
 		</td><td> <!-- КОНТРОЛЛЕР -->
 			<? if(strlen($s['controlclass']) > 10 && 
 				  !empty($s['template']) &&
 				  !empty($s['modelclass'])): ?>
-				<p><input id="control-generate" type="checkbox" name="files[controller]" value="1" <?=(getVar($s['files']['controller']) ? 'checked="checked"' : '');?> /> <label for="control-generate">Сгенерировать</label></p>
+				<p><label><input type="checkbox" name="files[controller]" value="1" <?=(getVar($s['files']['controller']) ? 'checked="checked"' : '');?> /> Сгенерировать</label></p>
 			<? endif; ?>
+		</td><td> <!-- КОНФИГ -->
+			<p><label><input type="checkbox" name="files[config]" value="1" <?=(getVar($s['files']['config']) ? 'checked="checked"' : '');?> /> Сгенерировать</label></p>
 		</td><td> <!-- ШАБЛОНЫ -->
 		
 			<? if(!empty($s['template'])): ?>
@@ -244,7 +252,7 @@ require('data/actions.php');
 	
 	<? if(getVar($s['template'])): ?>
 	<tr>
-		<td colspan="3" align="center">
+		<td colspan="4" align="center">
 			<input type="checkbox" id="clear-output-dir" name="clear-output-dir" value="1" <?=(getVar($s['clear-output-dir']) ? 'checked="checked"' : '');?> /> <label for="clear-output-dir">Очистить предыдущие</label><br />
 			<input type="submit" name="" value="Сгенерировать" />
 		</td>

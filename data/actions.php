@@ -1,6 +1,7 @@
 <?
 
 $action = isset($_POST['action']) ? $_POST['action'] : '';
+unset($_POST['action']);
 
 $messenger = Messenger::get();
 
@@ -11,23 +12,10 @@ if($action == 'saveData'){
 		$_POST = array_stripslashes($_POST);
 	
 	// echo '<pre>'; print_r($_POST); die;
-	$s['template'] = trim($_POST['template']);
 	
-	$s['tablename'] 	= trim($_POST['tablename']);
-	$s['modulename'] 	= trim($_POST['modulename']);
-	$s['modelclass'] 	= trim($_POST['modelclass']);
-	$s['controlclass'] 	= trim($_POST['controlclass']);
-	
-	$s['admSection']    = trim($_POST['admSection']);
-	
-	$s['strValidatIndividRules'] = trim($_POST['validatIndividRules']);
-	
-	$s['fieldsTitles'] 	 = (array)$_POST['fieldsTitles'];
-	$s['sortableFields'] = (array)$_POST['sortableFields'];
-	$s['tplFields'] 	 = (array)$_POST['tplFields'];
-	$s['inputTypes'] 	 = (array)$_POST['inputTypes'];
-	$s['useHtmlForm'] 	 = !empty($_POST['useHtmlForm']);
-	
+	$s['template'] = 'vik-off-cmf-modular';
+	foreach($_POST as $k => $v)
+		$s[$k] = $v;
 	
 	Storage::get(GEN_TYPE)->save();
 	
@@ -40,6 +28,7 @@ elseif($action == 'generate'){
 	
 	$s['files']['model'] 			= getVar($_POST['files']['model']);
 	$s['files']['controller'] 		= getVar($_POST['files']['controller']);
+	$s['files']['config'] 			= getVar($_POST['files']['config']);
 	$s['files']['tpl-admin-list']	= getVar($_POST['files']['tpl-admin-list']);
 	$s['files']['tpl-list'] 		= getVar($_POST['files']['tpl-list']);
 	$s['files']['tpl-view']		 	= getVar($_POST['files']['tpl-view']);

@@ -14,7 +14,7 @@
 	</div>
 	
 	<div class="paragraph">
-		<form action="" method="post">
+		<form action="<?= "<?= href('admin/$ADMIN_SECTION'); ?>"; ?>" method="post">
 			<input type="hidden" name="id" value="<?= '<?= $this->instanceId; ?>'; ?>" />
 			<?= '<?= FORMCODE; ?>'; ?>
 			
