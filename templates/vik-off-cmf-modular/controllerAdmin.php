@@ -69,7 +69,7 @@ class __CONTROLLERNAME__ extends Controller {
 		
 		$pageTitle = 'Создание новой страницы';
 		
-		$variables = array_merge(Tools::unescape($_POST), array(
+		$variables = array_merge($_POST, array(
 			'instanceId' => 0,
 			'pageTitle'  => $pageTitle,
 			'validation' => __MODELNAME__::create()->getValidator()->getJsRules(),
@@ -153,7 +153,7 @@ class __CONTROLLERNAME__ extends Controller {
 		$instance = new __MODELNAME__($instanceId);
 		$saveMode = $instance->isNewObj ? __MODELNAME__::SAVE_CREATE : __MODELNAME__::SAVE_EDIT;
 		
-		if ($instance->save(Tools::unescape($_POST), $saveMode)) {
+		if ($instance->save($_POST, $saveMode)) {
 			Messenger::get()->addSuccess('Запись сохранена');
 			$this->_redirectUrl = !empty($this->_redirectUrl)
 				? preg_replace('/\(%([\w\-]+)%\)/e', '$instance->getField("$1")', $this->_redirectUrl)
