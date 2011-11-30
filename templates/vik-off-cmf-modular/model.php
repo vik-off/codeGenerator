@@ -59,7 +59,7 @@ class __CLASSNAME__ extends ActiveRecord {
 	 * @param array &$data - данные полученные основным запросом
 	 * @return void
 	 */
-	protected function afterLoad(&$data){}
+	protected function _afterLoad(&$data){}
 	
 	/** ПОДГОТОВКА ДАННЫХ К ОТОБРАЖЕНИЮ */
 	public function beforeDisplay($data){
@@ -100,10 +100,10 @@ class __CLASSNAME__ extends ActiveRecord {
 	}
 		
 	/** ПРЕ-ВАЛИДАЦИЯ ДАННЫХ */
-	public function preValidation(&$data){}
+	public function preValidation(&$data, $saveMode = self::SAVE_DEFAULT){}
 	
 	/** ПОСТ-ВАЛИДАЦИЯ ДАННЫХ */
-	public function postValidation(&$data){
+	public function postValidation(&$data, $saveMode = self::SAVE_DEFAULT){
 		
 		// $data['author'] = USER_AUTH_ID;
 		// $data['modif_date'] = time();

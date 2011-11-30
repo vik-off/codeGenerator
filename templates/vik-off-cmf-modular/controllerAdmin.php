@@ -83,9 +83,9 @@ class __CONTROLLERNAME__ extends Controller {
 	}
 	
 	/** DISPLAY EDIT */
-	public function display_edit($uid = null){
+	public function display_edit($instanceId = null){
 		
-		$instanceId = (int)$uid;
+		$instanceId = (int)$instanceId;
 		$instance = __MODELNAME__::load($instanceId);
 		
 		$pageTitle = '<span style="font-size: 14px;">Редактирование элемента</span> #'.$instance->getField('id');
@@ -104,9 +104,9 @@ class __CONTROLLERNAME__ extends Controller {
 	}
 	
 	/** DISPLAY COPY */
-	public function display_copy($uid = null){
+	public function display_copy($instanceId = null){
 		
-		$instanceId = (int)$uid;
+		$instanceId = (int)$instanceId;
 		$instance = __MODELNAME__::load($instanceId);
 		
 		$pageTitle = 'Копирование записи';
@@ -125,9 +125,9 @@ class __CONTROLLERNAME__ extends Controller {
 	}
 	
 	/** DISPLAY DELETE */
-	public function display_delete($uid = null){
+	public function display_delete($instanceId = null){
 		
-		$instanceId = (int)$uid;
+		$instanceId = (int)$instanceId;
 		$instance = __MODELNAME__::load($instanceId);
 
 		$variables = array_merge($instance->GetAllFieldsPrepared(), array(
