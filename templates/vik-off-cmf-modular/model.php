@@ -123,7 +123,7 @@ class __CLASSNAME__ extends ActiveRecord {
 	
 }
 
-class __COLLECTION_CLASS__ extends ARCollection{
+class __COLLECTION_CLASS__ extends ARCollection {
 	
 	/**
 	 * поля, по которым возможна сортировка коллекции
@@ -134,16 +134,24 @@ class __COLLECTION_CLASS__ extends ARCollection{
 	
 	
 	/** ТОЧКА ВХОДА В КЛАСС */
-	public static function load(){
+	public static function load($filters = array(), $options = array()){
 			
-		return new __COLLECTION_CLASS__();
+		return new __COLLECTION_CLASS__($filters, $options);
+	}
+	
+	/** КОНСТРУКТОР */
+	public function __construct($filters = array(), $options = array()){
+		
+		$this->_filters = $filters;
+		$this->_options = $options;
 	}
 
 	/** ПОЛУЧИТЬ СПИСОК С ПОСТРАНИЧНОЙ РАЗБИВКОЙ */
 	public function getPaginated(){
 		
+		$where = $this->_getSqlFilter();
 		$sorter = new Sorter('id', 'DESC', $this->_sortableFieldsTitles);
-		$paginator = new Paginator('sql', array('*', 'FROM '.__CLASSNAME__::TABLE.' ORDER BY '.$sorter->getOrderBy()), 50);
+		$paginator = new Paginator('sql', array('*', 'FROM '.__CLASSNAME__::TABLE.' '.$where.' ORDER BY '.$sorter->getOrderBy()), 50);
 		
 		$data = db::get()->getAll($paginator->getSql(), array());
 		
@@ -160,7 +168,8 @@ class __COLLECTION_CLASS__ extends ARCollection{
 	/** ПОЛУЧИТЬ СПИСОК ВСЕХ ЭЛЕМЕНТОВ */
 	public function getAll(){
 		
-		$data = db::get()->getAllIndexed('SELECT * FROM '.__CLASSNAME__::TABLE, 'id', array());
+		$where = $this->_getSqlFilter();
+		$data = db::get()->getAllIndexed('SELECT * FROM '.__CLASSNAME__::TABLE.' '.$where, 'id', array());
 		
 		foreach($data as &$row)
 			$row = __CLASSNAME__::forceLoad($row['id'], $row)->getAllFieldsPrepared();
