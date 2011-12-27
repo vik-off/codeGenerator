@@ -3,10 +3,11 @@
 	<a href="<?= "<?= href('admin/$ADMIN_SECTION/new'); ?>"; ?>">Добавить запись</a>
 </div>
 
-<?= '<?= $this->pagination; ?>'; ?>
-
-
 <?= '<? if($this->collection): ?>'; ?>
+
+
+	<?= '<?= $this->pagination; ?>'; ?>
+
 
 	<table class="grid wide tr-highlight">
 	<tr>
@@ -34,10 +35,14 @@
 	<?= '<? endforeach; ?>'; ?>
 	
 	</table>
+
+	<?= '<?= $this->pagination; ?>'; ?>
+	
+	
 <?= '<? else: ?>'; ?>
 
+
 	<p>Сохраненных записей пока нет.</p>
+	
 <?= '<? endif; ?>'; ?>
 
-
-<?= '<?= $this->pagination; ?>'; ?>

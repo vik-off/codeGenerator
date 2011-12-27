@@ -52,6 +52,7 @@ require('data/actions.php');
 		ge('modelclass').value = capitalize(module) + '_Model';
 		ge('controlclass').value = capitalize(module) + '_Controller';
 		ge('admcontrolclass').value = capitalize(module) + '_AdminController';
+		ge('moduledir').value = capitalize(module);
 		ge('frontsection').value = module2url(module);
 		ge('admsection').value = 'content/' + module2url(module);
 	}
@@ -64,6 +65,7 @@ require('data/actions.php');
 		ge('modelclass').onkeyup = function(){
 			ge('controlclass').value = this.value.replace('Model', 'Controller');
 			ge('admcontrolclass').value = this.value.replace('Model', 'AdminController');
+			ge('moduledir').value = this.value.split('_')[0];
 		}
 		
 	}
@@ -118,6 +120,9 @@ require('data/actions.php');
 	</tr><tr>
 		<td>Класс контроллера</td>
 		<td><input id="admcontrolclass" type="text" name="admcontrolclass" value="<?=getVar($s['admcontrolclass']);?>"></td>
+	</tr><tr>
+		<td>Папка модуля</td>
+		<td><input id="moduledir" type="text" name="moduledir" value="<?=getVar($s['moduledir']);?>"></td>
 	</tr><tr>
 		<td>Заголовок модуля</td>
 		<td><input id="moduletitle" type="text" name="moduletitle" value="<?=getVar($s['moduletitle']);?>"></td>
