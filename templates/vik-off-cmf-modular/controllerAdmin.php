@@ -20,14 +20,14 @@ class __CONTROLLERNAME__ extends Controller {
 	
 	/** ассоциация методов контроллера с ресурсами */
 	public $methodResources = array(
-		'display_list'    => 'edit',
-		'display_new'     => 'edit',
-		'display_edit'    => 'edit',
-		'display_copy'    => 'edit',
-		'display_delete'  => 'edit',
+		'display_list'    => 'admin_edit',
+		'display_new'     => 'admin_edit',
+		'display_edit'    => 'admin_edit',
+		'display_copy'    => 'admin_edit',
+		'display_delete'  => 'admin_edit',
 
-		'action_save'     => 'edit',
-		'action_delete'   => 'edit',
+		'action_save'     => 'admin_edit',
+		'action_delete'   => 'admin_edit',
 	);
 	
 	
@@ -77,8 +77,8 @@ class __CONTROLLERNAME__ extends Controller {
 		
 		BackendLayout::get()
 			->prependTitle($pageTitle)
-			->addBreadcrumb(array(null, $pageTitle))
-			->setContentPhpFile(self::TPL_PATH.'edit.php', $variables)
+			->addBreadcrumb($pageTitle)
+			->setContentPhpFile(self::TPL_PATH.'admin_edit.php', $variables)
 			->render();
 	}
 	
@@ -98,8 +98,8 @@ class __CONTROLLERNAME__ extends Controller {
 		
 		BackendLayout::get()
 			->prependTitle('Редактирование записи')
-			->addBreadcrumb(array(null, 'Редактирование записи'))
-			->setContentPhpFile(self::TPL_PATH.'edit.php', $variables)
+			->addBreadcrumb('Редактирование записи')
+			->setContentPhpFile(self::TPL_PATH.'admin_edit.php', $variables)
 			->render();
 	}
 	
@@ -119,8 +119,8 @@ class __CONTROLLERNAME__ extends Controller {
 		
 		BackendLayout::get()
 			->prependTitle($pageTitle)
-			->addBreadcrumb(array(null, $pageTitle))
-			->setContentPhpFile(self::TPL_PATH.'edit.php', $variables)
+			->addBreadcrumb($pageTitle)
+			->setContentPhpFile(self::TPL_PATH.'admin_edit.php', $variables)
 			->render();
 	}
 	
@@ -136,7 +136,7 @@ class __CONTROLLERNAME__ extends Controller {
 		
 		BackendLayout::get()
 			->prependTitle('Удаление записи')
-			->addBreadcrumb(array(null, 'Удаление записи'))
+			->addBreadcrumb('Удаление записи')
 			->setContentPhpFile(self::TPL_PATH.'delete.php', $variables)
 			->render();
 	}

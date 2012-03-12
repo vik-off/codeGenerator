@@ -7,7 +7,7 @@ return array(
 	'adminController' => '__ADM_CONTROLLERNAME__',
 	'resources' => array(
 		'view' => 'Просмотр',
-		'edit' => 'Редактирование',
+		'admin_edit' => 'Редактирование',
 	),
 );
 

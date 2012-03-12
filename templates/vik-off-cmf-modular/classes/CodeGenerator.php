@@ -230,7 +230,7 @@ class CodeGenerator extends CodeGeneratorCommon{
 	// ГЕНЕРАЦИЯ ШАБЛОНА EDIT
 	public function generateTplEdit($module, $moduledir, $fieldtitles, $type = TYPE_TABLE, $allowedFields, $inputTypes, $admSection){
 	
-		$tpl = $type == TYPE_TABLE ? 'edit_table.php' : 'edit_div.php';
+		$tpl = $type == TYPE_TABLE ? 'admin_edit_table.php' : 'admin_edit_div.php';
 		
 		$content = $this->parseHtmlTemplate('templates/'.$this->_template.'/templates/'.$tpl, array(
 			'MODULE'  		  => $this->getModuleUrl($module),
@@ -239,7 +239,7 @@ class CodeGenerator extends CodeGeneratorCommon{
 			'INPUT_TYPES' => $inputTypes,
 			'ADMIN_SECTION'   => $admSection,
 		));
-		$this->createFile('output/modules/'.$moduledir.'/templates/', 'edit.php', $content);
+		$this->createFile('output/modules/'.$moduledir.'/templates/', 'admin_edit.php', $content);
 	}
 	
 	// ГЕНЕРАЦИЯ ШАБЛОНА DELETE
