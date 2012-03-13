@@ -45,6 +45,9 @@ require('data/actions.php');
 		ge('modelclass').value = capitalize(table) + '_Model';
 		ge('controlclass').value = capitalize(table) + '_Controller';
 		ge('admcontrolclass').value = capitalize(table) + '_AdminController';
+		ge('moduledir').value = capitalize(table);
+		ge('frontsection').value = module2url(table);
+		ge('admsection').value = 'content/' + module2url(table);
 	}
 	
 	function moduleNameEdit(){
@@ -110,7 +113,10 @@ require('data/actions.php');
 		</td>
 	</tr><tr>
 		<td>Модуль</td>
-		<td><input id="modulename" type="text" name="modulename" value="<?=getVar($s['modulename']);?>"></td>
+		<td>
+			<input id="modulename" type="text" name="modulename" value="<?=getVar($s['modulename']);?>">
+			как правило, с маленькой буквы в единственном числе
+		</td>
 	</tr><tr>
 		<td>Класс модели</td>
 		<td><input id="modelclass" type="text" name="modelclass" value="<?=getVar($s['modelclass']);?>"></td>
@@ -125,7 +131,10 @@ require('data/actions.php');
 		<td><input id="moduledir" type="text" name="moduledir" value="<?=getVar($s['moduledir']);?>"></td>
 	</tr><tr>
 		<td>Заголовок модуля</td>
-		<td><input id="moduletitle" type="text" name="moduletitle" value="<?=getVar($s['moduletitle']);?>"></td>
+		<td>
+			<input id="moduletitle" type="text" name="moduletitle" value="<?=getVar($s['moduletitle']);?>">
+			как правило, во множественном числе
+		</td>
 	</tr><tr>
 		<td>Раздел фронтенда</td>
 		<td><input id="frontsection" type="text" name="frontsection" value="<?=getVar($s['frontsection']);?>"></td>
