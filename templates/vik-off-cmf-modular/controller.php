@@ -60,9 +60,9 @@ class __CONTROLLERNAME__ extends Controller {
 	}
 	
 	/** DISPLAY VIEW */
-	public function display_view($uid = null){
+	public function display_view($instanceId = null){
 		
-		$instanceId = (int)$uid;
+		$instanceId = (int)$instanceId;
 		
 		$variables = __MODELNAME__::load($instanceId)->GetAllFieldsPrepared();
 		FrontendLayout::get()
