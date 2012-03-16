@@ -64,7 +64,7 @@ class __CONTROLLERNAME__ extends Controller {
 		
 		$instanceId = (int)$instanceId;
 		
-		$variables = __MODELNAME__::load($instanceId)->GetAllFieldsPrepared();
+		$variables = __MODELNAME__::load($instanceId)->getAllFieldsPrepared();
 		FrontendLayout::get()
 			->setTitle('Детально')
 			->setContentPhpFile(self::TPL_PATH.'view.php', $variables)

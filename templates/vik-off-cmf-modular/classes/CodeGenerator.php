@@ -245,12 +245,12 @@ class CodeGenerator extends CodeGeneratorCommon{
 	// ГЕНЕРАЦИЯ ШАБЛОНА DELETE
 	public function generateTplDelete($module, $moduledir, $fieldtitles, $admSection){
 		
-		$content = $this->parseHtmlTemplate('templates/'.$this->_template.'/templates/delete.php', array(
+		$content = $this->parseHtmlTemplate('templates/'.$this->_template.'/templates/admin_delete.php', array(
 			'MODULE'  		  => $this->getModuleUrl($module),
 			'FIELDS_TITLES'   => $fieldtitles,
 			'ADMIN_SECTION'   => $admSection,
 		));
-		$this->createFile('output/modules/'.$moduledir.'/templates/', 'delete.php', $content);
+		$this->createFile('output/modules/'.$moduledir.'/templates/', 'admin_delete.php', $content);
 	}
 	
 	/** ПОЛУЧИТЬ HTML-INPUT УКАЗАННОГО ТИПА */

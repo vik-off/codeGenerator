@@ -90,7 +90,7 @@ class __CONTROLLERNAME__ extends Controller {
 		
 		$pageTitle = '<span style="font-size: 14px;">Редактирование элемента</span> #'.$instance->getField('id');
 	
-		$variables = array_merge($instance->GetAllFieldsPrepared(), array(
+		$variables = array_merge($instance->getAllFieldsPrepared(), array(
 			'instanceId' => $instanceId,
 			'pageTitle'  => $pageTitle,
 			'validation' => $instance->getValidator()->getJsRules(),
@@ -111,7 +111,7 @@ class __CONTROLLERNAME__ extends Controller {
 		
 		$pageTitle = 'Копирование записи';
 	
-		$variables = array_merge($instance->GetAllFieldsPrepared(), array(
+		$variables = array_merge($instance->getAllFieldsPrepared(), array(
 			'instanceId' => 0,
 			'pageTitle'  => $pageTitle,
 			'validation' => $instance->getValidator()->getJsRules(),
@@ -130,14 +130,14 @@ class __CONTROLLERNAME__ extends Controller {
 		$instanceId = (int)$instanceId;
 		$instance = __MODELNAME__::load($instanceId);
 
-		$variables = array_merge($instance->GetAllFieldsPrepared(), array(
+		$variables = array_merge($instance->getAllFieldsPrepared(), array(
 			'instanceId' => $instanceId,
 		));
 		
 		BackendLayout::get()
 			->prependTitle('Удаление записи')
 			->addBreadcrumb('Удаление записи')
-			->setContentPhpFile(self::TPL_PATH.'delete.php', $variables)
+			->setContentPhpFile(self::TPL_PATH.'admin_delete.php', $variables)
 			->render();
 	}
 	
