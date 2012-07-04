@@ -1,3 +1,0 @@
-vik-off-cmf
-vik-off-cmf-no-smarty
-vik-off-cmf-modular
