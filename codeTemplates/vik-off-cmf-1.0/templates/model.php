@@ -22,31 +22,31 @@ class __CLASSNAME__ extends ActiveRecord {
 	const NOT_FOUND_MESSAGE = 'Страница не найдена';
 
 	
-	/** ТОЧКА ВХОДА В КЛАСС (СОЗДАНИЕ НОВОГО ОБЪЕКТА) */
+	/** точка входа в класс (создание нового объекта) */
 	public static function create(){
 			
 		return new __CLASSNAME__(0, self::INIT_NEW);
 	}
 	
-	/** ТОЧКА ВХОДА В КЛАСС (ЗАГРУЗКА СУЩЕСТВУЮЩЕГО ОБЪЕКТА) */
+	/** точка входа в класс (загрузка существующего объекта) */
 	public static function load($id){
 		
 		return new __CLASSNAME__($id, self::INIT_EXISTS);
 	}
 	
-	/** ТОЧКА ВХОДА В КЛАСС (ЗАГРУЗКА СУЩЕСТВУЮЩЕГО ОБЪЕКТА) */
+	/** точка входа в класс (загрузка существующего объекта) */
 	public static function forceLoad($id, $fieldvalues){
 		
 		return new __CLASSNAME__($id, self::INIT_EXISTS_FORCE, $fieldvalues);
 	}
 	
-	/** ПОЛУЧИТЬ ИМЯ КЛАССА */
+	/** получить имя класса */
 	public function getClass(){
 		return __CLASS__;
 	}
 	
 	/**
-	 * ДОЗАГРУЗКА ДАННЫХ
+	 * дозагрузка данных
 	 * выполняется после основной загрузки данных из БД
 	 * и только для существующих объектов
 	 * @param array &$data - данные полученные основным запросом
@@ -54,7 +54,7 @@ class __CLASSNAME__ extends ActiveRecord {
 	 */
 	protected function _afterLoad(&$data){}
 	
-	/** ПОДГОТОВКА ДАННЫХ К ОТОБРАЖЕНИЮ */
+	/** подготовка данных к отображению */
 	public function beforeDisplay($data){
 	
 		// $data['modif_date'] = YDate::loadTimestamp($data['modif_date'])->getStrDateShortTime();
@@ -62,7 +62,7 @@ class __CLASSNAME__ extends ActiveRecord {
 		return $data;
 	}
 	
-	/** ПОЛУЧИТЬ ЭКЗЕМПЛЯР ВАЛИДАТОРА */
+	/** получить экземпляр валидатора */
 	public function getValidator($mode = self::SAVE_CREATE){
 		
 		$rules = __VALIDATION_INDIVIDUAL__;
@@ -92,10 +92,10 @@ class __CLASSNAME__ extends ActiveRecord {
 		return $validator;
 	}
 		
-	/** ПРЕ-ВАЛИДАЦИЯ ДАННЫХ */
+	/** пре-валидация данных */
 	public function preValidation(&$data, $saveMode = self::SAVE_DEFAULT){}
 	
-	/** ПОСТ-ВАЛИДАЦИЯ ДАННЫХ */
+	/** пост-валидация данных */
 	public function postValidation(&$data, $saveMode = self::SAVE_DEFAULT){
 		
 		// $data['author'] = USER_AUTH_ID;
@@ -104,12 +104,12 @@ class __CLASSNAME__ extends ActiveRecord {
 			// $data['create_date'] = time();
 	}
 	
-	/** ДЕЙСТВИЕ ПОСЛЕ СОХРАНЕНИЯ */
+	/** действие после сохранения */
 	public function afterSave($data){
 		
 	}
 	
-	/** ПОДГОТОВКА К УДАЛЕНИЮ ОБЪЕКТА */
+	/** подготовка к удалению объекта */
 	public function beforeDestroy(){
 	
 	}
@@ -126,20 +126,20 @@ class __COLLECTION_CLASS__ extends ARCollection {
 	protected $_sortableFieldsTitles = array(__SORTABLE_FIELDS__	);
 	
 	
-	/** ТОЧКА ВХОДА В КЛАСС */
+	/** точка входа в класс */
 	public static function load($filters = array(), $options = array()){
 			
 		return new __COLLECTION_CLASS__($filters, $options);
 	}
 	
-	/** КОНСТРУКТОР */
+	/** конструктор */
 	public function __construct($filters = array(), $options = array()){
 		
 		$this->_filters = $filters;
 		$this->_options = $options;
 	}
 
-	/** ПОЛУЧИТЬ СПИСОК С ПОСТРАНИЧНОЙ РАЗБИВКОЙ */
+	/** получить список с постраничной разбивкой */
 	public function getPaginated(){
 		
 		$where = $this->_getSqlFilter();
@@ -158,7 +158,7 @@ class __COLLECTION_CLASS__ extends ARCollection {
 		return $data;
 	}
 	
-	/** ПОЛУЧИТЬ СПИСОК ВСЕХ ЭЛЕМЕНТОВ */
+	/** получить список всех элементов */
 	public function getAll(){
 		
 		$where = $this->_getSqlFilter();

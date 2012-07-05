@@ -100,6 +100,8 @@ class DbStructParser {
 		
 		foreach($fieldsDefArrRaw as $fieldDef){
 			
+			$fieldDef = trim($fieldDef);
+
 			$row = array(
 				'Field' => '',
 				'Type' => '',
@@ -124,8 +126,12 @@ class DbStructParser {
 				$fieldDef = str_ireplace(' AUTO_INCREMENT', '', $fieldDef);
 				$row['Extra'] = 'auto_increment';
 			}
-			if(preg_match('/^\s*INDEX\s*\(.+\)/', $fieldDef)){
+			if(preg_match('/^INDEX\s*\(.+\)/i', $fieldDef)){
 				continue; // строка, определяющая индекс
+			}
+
+			if(preg_match('/^KEY\b/i', $fieldDef)){
+				continue; // строка, ключ
 			}
 			if(stripos($fieldDef, 'NOT NULL')){
 				$fieldDef = str_ireplace(' NOT NULL', '', $fieldDef);
