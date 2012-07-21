@@ -45,7 +45,11 @@ class __CONTROLLERNAME__ extends Controller {
 	/** DISPLAY LIST */
 	public function display_list(){
 		
+%% BLOCK BEGIN : PUBLISH %%
+		$collection = new __COLLECTION_CLASS__(array('published' => TRUE));
+%% BLOCK ELSE : PUBLISH %%
 		$collection = new __COLLECTION_CLASS__();
+%% BLOCK END : PUBLISH %%
 		$variables = array(
 			'collection' => $collection->getPaginated(),
 			'pagination' => $collection->getPagination(),
@@ -63,8 +67,14 @@ class __CONTROLLERNAME__ extends Controller {
 	public function display_view($instanceId = null){
 		
 		$instanceId = (int)$instanceId;
+		$instance = __MODELNAME__::load($instanceId);
+%% BLOCK BEGIN : PUBLISH %%
 		
-		$variables = __MODELNAME__::load($instanceId)->getAllFieldsPrepared();
+		if (!$instance->published)
+			throw new Exception404(__MODELNAME__::NOT_FOUND_MESSAGE);
+%% BLOCK END : PUBLISH %%
+		
+		$variables = $instance->getAllFieldsPrepared();
 		FrontendLayout::get()
 			->setTitle('Детально')
 			->setContentPhpFile(self::TPL_PATH.'view.php', $variables)

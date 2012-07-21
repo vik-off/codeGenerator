@@ -5,6 +5,9 @@
 %%%		__VALIDATION_COMMON__
 %%%		__VALIDATION_INDIVIDUAL__
 %%%		__FIELD_TITLES__
+%%%
+%%%	USE BLOCKS:
+%%%		PUBLISH
 <?php
 
 class __CLASSNAME__ extends ActiveRecord {
@@ -57,8 +60,8 @@ class __CLASSNAME__ extends ActiveRecord {
 	/** подготовка данных к отображению */
 	public function beforeDisplay($data){
 	
-		// $data['modif_date'] = YDate::loadTimestamp($data['modif_date'])->getStrDateShortTime();
-		// $data['create_date'] = YDate::loadTimestamp($data['create_date'])->getStrDateShortTime();
+		// $data['modif_date_str'] = YDate::loadTimestamp($data['modif_date'])->getStrDateShortTime();
+		// $data['create_date_str'] = YDate::loadTimestamp($data['create_date'])->getStrDateShortTime();
 		return $data;
 	}
 	
@@ -98,7 +101,7 @@ class __CLASSNAME__ extends ActiveRecord {
 	/** пост-валидация данных */
 	public function postValidation(&$data, $saveMode = self::SAVE_DEFAULT){
 		
-		// $data['author'] = USER_AUTH_ID;
+		// $data['author'] = CurUser::id();
 		// $data['modif_date'] = time();
 		// if($this->isNewObj)
 			// $data['create_date'] = time();
@@ -113,6 +116,22 @@ class __CLASSNAME__ extends ActiveRecord {
 	public function beforeDestroy(){
 	
 	}
+%% BLOCK BEGIN : PUBLISH %%
+	
+	/** опубликовать запись */
+	public function publish(){
+	
+		$this->setField('published', TRUE);
+		$this->_save();
+	}
+	
+	/** скрыть запись */
+	public function unpublish(){
+	
+		$this->setField('published', FALSE);
+		$this->_save();
+	}
+%% BLOCK END : PUBLISH %%
 	
 }
 

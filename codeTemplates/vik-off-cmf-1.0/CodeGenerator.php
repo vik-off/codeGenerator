@@ -2,6 +2,15 @@
 
 class CodeGenerator extends CodeGeneratorCommon {
 
+	/** включаемые в шаблоны блоки */
+	protected $_blocks = array();
+
+	protected function _init(){
+
+		if (!empty($this->_data['implementPublished']))
+			$this->_blocks['PUBLISH'] = TRUE;
+	}
+
 	/** СГЕНЕРИРОВАТЬ ВСЕ НЕОБХОДИМЫЕ ФАЙЛЫ */
 	public function generateAll($files){
 		
@@ -146,8 +155,8 @@ class CodeGenerator extends CodeGeneratorCommon {
 			'__FIELD_TITLES__' 			=> $fieldTitles,
 			'__SORTABLE_FIELDS__'		=> $sortableFields,
 		);
-		
-		$content = $this->parsePhpTemplate('codeTemplates/'.$this->_template.'/templates/model.php', $placeholders);
+		$tpl = 'codeTemplates/'.$this->_template.'/templates/model.php';
+		$content = $this->parsePhpTemplate($tpl, $placeholders, $this->_blocks);
 		$this->createFile('output/modules/'.$moduledir.'/', $modelName.'.php', $content);
 	}
 
@@ -163,11 +172,13 @@ class CodeGenerator extends CodeGeneratorCommon {
 			'__COLLECTION_CLASS__' 	=> preg_replace('/Model$/', 'Collection', $modelName),
 			'__ADMSECTION__'		=> $admSection,
 		);
-		$content = $this->parsePhpTemplate('codeTemplates/'.$this->_template.'/templates/controller.php', $placeholders);
+		$tpl1 = 'codeTemplates/'.$this->_template.'/templates/controller.php';
+		$content = $this->parsePhpTemplate($tpl1, $placeholders, $this->_blocks);
 		$this->createFile('output/modules/'.$moduledir.'/', $controllerName.'.php', $content);
 		
 		$placeholders['__CONTROLLERNAME__'] = $adminControllerName;
-		$contentAdmin = $this->parsePhpTemplate('codeTemplates/'.$this->_template.'/templates/controllerAdmin.php', $placeholders);
+		$tpl2 = 'codeTemplates/'.$this->_template.'/templates/controllerAdmin.php';
+		$contentAdmin = $this->parsePhpTemplate($tpl2, $placeholders, $this->_blocks);
 		$this->createFile('output/modules/'.$moduledir.'/', $adminControllerName.'.php', $contentAdmin);
 	}
 	
@@ -182,7 +193,8 @@ class CodeGenerator extends CodeGeneratorCommon {
 			'__ADM_CONTROLLERNAME__' 	=> $adminControllerName,
 		);
 		
-		$content = $this->parsePhpTemplate('codeTemplates/'.$this->_template.'/templates/config.php', $placeholders);
+		$tpl = 'codeTemplates/'.$this->_template.'/templates/config.php';
+		$content = $this->parsePhpTemplate($tpl, $placeholders, $this->_blocks);
 		$this->createFile('output/modules/'.$moduledir.'/', 'config.php', $content);
 	}
 	
@@ -195,6 +207,7 @@ class CodeGenerator extends CodeGeneratorCommon {
 			'SORTABLE_FIELDS' => $sortableFields,
 			'ALLOWED_FIELDS'  => $allowedFields,
 			'ADMIN_SECTION'   => $admSection,
+			'BLOCKS'          => $this->_blocks,
 		));
 		$this->createFile('output/modules/'.$moduledir.'/templates/', 'admin_list.php', $content);
 	}
@@ -209,6 +222,7 @@ class CodeGenerator extends CodeGeneratorCommon {
 			'FIELDS_TITLES'   => $fieldtitles,
 			'ALLOWED_FIELDS'  => $allowedFields,
 			'ADMIN_SECTION'   => $admSection,
+			'BLOCKS'          => $this->_blocks,
 		));
 		$this->createFile('output/modules/'.$moduledir.'/templates/', 'list.php', $content);
 	}
@@ -223,6 +237,7 @@ class CodeGenerator extends CodeGeneratorCommon {
 			'FIELDS_TITLES'   => $fieldtitles,
 			'ALLOWED_FIELDS'  => $allowedFields,
 			'ADMIN_SECTION'   => $admSection,
+			'BLOCKS'          => $this->_blocks,
 		));
 		$this->createFile('output/modules/'.$moduledir.'/templates/', 'view.php', $content);
 	}
@@ -238,6 +253,7 @@ class CodeGenerator extends CodeGeneratorCommon {
 			'ALLOWED_FIELDS' => $allowedFields,
 			'INPUT_TYPES' => $inputTypes,
 			'ADMIN_SECTION'   => $admSection,
+			'BLOCKS'          => $this->_blocks,
 		));
 		$this->createFile('output/modules/'.$moduledir.'/templates/', 'admin_edit.php', $content);
 	}
@@ -249,6 +265,7 @@ class CodeGenerator extends CodeGeneratorCommon {
 			'MODULE'  		  => $this->getModuleUrl($module),
 			'FIELDS_TITLES'   => $fieldtitles,
 			'ADMIN_SECTION'   => $admSection,
+			'BLOCKS'          => $this->_blocks,
 		));
 		$this->createFile('output/modules/'.$moduledir.'/templates/', 'admin_delete.php', $content);
 	}

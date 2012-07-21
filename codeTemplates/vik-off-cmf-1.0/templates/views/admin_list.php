@@ -13,16 +13,46 @@
 	<tr>
 <? foreach($FIELDS_TITLES as $field => $title){
 	if(!empty($ALLOWED_FIELDS[$field]))
-		echo "\t\t".'<th>'.(!empty($SORTABLE_FIELDS[$field]) ? "<?= \$this->sorters['".$field."']; ?>" : $title).'</th>'."\r\n";
+		echo "\t\t".'<th>'.(!empty($SORTABLE_FIELDS[$field]) ? "<?= \$this->sorters['".$field."']; ?>" : $title).'</th>'."\n";
 	} ?>
 		<th>Опции</th>
 	</tr>
 	<?= '<? foreach($this->collection as $item): ?>' ?>
 	
-	<tr>
-<? foreach($FIELDS_TITLES as $field => $title)
-		if(!empty($ALLOWED_FIELDS[$field]))
-			echo "\t\t<td><?= \$item['".$field."']; ?></td>\r\n"; ?>
+	<?= !empty($BLOCKS['PUBLISH'])
+		? '<tr <?= !$item[\'published\'] ? \'class="unpublished"\' : \'\'; ?>>'
+		: '<tr>'; ?>
+
+<?
+foreach($FIELDS_TITLES as $field => $title) {
+	if(!empty($ALLOWED_FIELDS[$field])) {
+		if ($field === 'published' && !empty($BLOCKS['PUBLISH'])) {
+			echo
+'		<td class="publish-cell">
+		
+			<div class="tr-hover-opened" style="height: 18px;">
+				<form class="inline" action="" method="post">
+					<input type="hidden" name="id" value="<?= $item[\'id\']; ?>" />
+					<?= FORMCODE; ?>
+					<? if($item[\'published\']): ?>
+						<input class="button-small" type="submit" name="action[admin/'.$MODULE.'/unpublish]" value="Скрыть" />
+					<? else: ?>
+						<input class="button-small" type="submit" name="action[admin/'.$MODULE.'/publish]" value="Опубликовать" />
+					<? endif; ?>
+				</form>
+			</div>
+			
+			<div class="tr-hover-closed">
+				<? if($item[\'published\']): ?> Опубл. <? else: ?> Скрыт <? endif; ?>
+			</div>
+		</td>
+';
+			continue;
+		}
+		echo "\t\t<td><?= \$item['".$field."']; ?></td>\n";
+	}
+}
+?>
 			
 		<td class="center" style="width: 90px;">
 			<div class="tr-hover-visible options">

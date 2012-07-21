@@ -17,7 +17,11 @@ class CodeGeneratorCommon {
 		
 		if($clearDir)
 			$this->clearOutputDir();
+
+		$this->_init();
 	}
+
+	protected function _init(){}
 	
 	/** СГЕНЕРИРОВАТЬ ВСЕ НЕОБХОДИМЫЕ ФАЙЛЫ */
 	public function generateAll($files){}
@@ -69,12 +73,45 @@ class CodeGeneratorCommon {
 	}
 	
 	// ПАРСИТЬ PHP ШАБЛОН
-	public function parsePhpTemplate($tpl, $placeholders){
+	public function parsePhpTemplate($tpl, $placeholders, $blocks = array()){
 		
+		$curBlock = null;
+		$includeRows = TRUE;
+
 		$output = '';
-		foreach(file($tpl) as $row)
-			if(substr($row, 0, 3) != '%%%')
+
+		foreach(file($tpl) as $row) {
+			if(substr($row, 0, 3) === '%%%') // comment
+				continue;
+			if (substr($row, 0, 2) === '%%') {
+				// block begin
+				if (preg_match('/%%\s+BLOCK\s+BEGIN\s*:\s*(\w+)\s*%%/', $row, $matches)) {
+					$curBlock = $matches[1];
+					$includeRows = !empty($blocks[$curBlock]);
+					continue;
+				}
+				// block else
+				elseif (preg_match('/%%\s+BLOCK\s+ELSE\s*:\s*(\w+)\s*%%/', $row, $matches)) {
+					if ($curBlock !== $matches[1])
+						throw new Exception("template parse error: mismatch block tags.
+							Open tag: '$curBlock', else tag: '{$matches[1]}'");
+					$includeRows = !$includeRows;
+					continue;
+				}
+				// block end
+				elseif (preg_match('/%%\s+BLOCK\s+END\s*:\s*(\w+)\s*%%/', $row, $matches)) {
+					if ($curBlock !== $matches[1])
+						throw new Exception("template parse error: mismatch block tags.
+							Open tag: '$curBlock', close tag: '{$matches[1]}'");
+					$curBlock = null;
+					$includeRows = TRUE;
+					continue;
+				}
+			}
+
+			if ($includeRows)
 				$output .= strtr($row, $placeholders);
+		}
 		
 		return $output;
 	}

@@ -181,10 +181,11 @@ $s = $this->data;
 	</tr><tr>
 		<td></td>
 		<td>
-			<label>
-				<input type="checkbox" name="useHtmlForm" value="1" <? if(!empty($s['useHtmlForm'])): ?>checked="checked"<? endif; ?>>
-				Использовать класс Html_Form для вывода полей форм
-			</label>
+			<?= Inp::checkbox('useHtmlForm', !empty($s['useHtmlForm']),
+				              'Использовать класс Html_Form для вывода полей форм'); ?>
+			<br />
+			<?= Inp::checkbox('implementPublished', !empty($s['implementPublished']),
+				              'Внедрить обработку поля <b>published</b>'); ?>
 		</td>
 	</tr><tr>
 		<td></td>

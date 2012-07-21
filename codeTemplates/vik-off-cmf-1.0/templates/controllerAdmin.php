@@ -20,14 +20,18 @@ class __CONTROLLERNAME__ extends Controller {
 	
 	/** ассоциация методов контроллера с ресурсами */
 	public $methodResources = array(
-		'display_list'    => 'admin_edit',
-		'display_new'     => 'admin_edit',
-		'display_edit'    => 'admin_edit',
-		'display_copy'    => 'admin_edit',
-		'display_delete'  => 'admin_edit',
+		'display_list'     => 'admin_edit',
+		'display_new'      => 'admin_edit',
+		'display_edit'     => 'admin_edit',
+		'display_copy'     => 'admin_edit',
+		'display_delete'   => 'admin_edit',
 
-		'action_save'     => 'admin_edit',
-		'action_delete'   => 'admin_edit',
+		'action_save'      => 'admin_edit',
+		'action_delete'    => 'admin_edit',
+%% BLOCK BEGIN : PUBLISH %%
+		'action_publish'   => 'edit',
+		'action_unpublish' => 'edit',
+%% BLOCK END : PUBLISH %%
 	);
 	
 	
@@ -180,6 +184,26 @@ class __CONTROLLERNAME__ extends Controller {
 		}
 
 	}
+%% BLOCK BEGIN : PUBLISH %%
+	
+	/** ACTION PUBLISH */
+	public function action_publish(){
+		
+		$instance = __MODELNAME__::Load(getVar($_POST['id'], 0, 'int'));
+		$instance->publish();
+		Messenger::get()->addSuccess('Запись "'.$instance->title.'" опубликована');
+		return TRUE;
+	}
+	
+	/** ACTION UNPUBLISH */
+	public function action_unpublish(){
+		
+		$instance = __MODELNAME__::Load(getVar($_POST['id'], 0, 'int'));
+		$instance->unpublish();
+		Messenger::get()->addSuccess('Запись "'.$instance->title.'" скрыта');
+		return TRUE;
+	}
+%% BLOCK END : PUBLISH %%
 	
 }
 
