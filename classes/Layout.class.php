@@ -36,7 +36,7 @@ class Layout{
 	/** конструктор */
 	protected function __construct(){
 		
-		$this->_tplPath = FS_ROOT.'templates/';
+		$this->_tplPath = FS_ROOT.'views/';
 	}
 	
 	public function setTitle($title){
