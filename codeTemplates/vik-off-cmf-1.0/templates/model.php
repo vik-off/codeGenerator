@@ -98,7 +98,7 @@ class __CLASSNAME__ extends ActiveRecord {
 	/** пост-валидация данных */
 	public function postValidation(&$data, $saveMode = self::SAVE_DEFAULT){
 		
-		// $data['author'] = USER_AUTH_ID;
+		// $data['author'] = CurUser::id();
 		// $data['modif_date'] = time();
 		// if($this->isNewObj)
 			// $data['create_date'] = time();
