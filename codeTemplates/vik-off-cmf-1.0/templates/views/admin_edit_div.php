@@ -11,12 +11,21 @@
 <?
 foreach($FIELDS_TITLES as $field => $title){
 	if(!empty($ALLOWED_FIELDS[$field]) && $field != 'id'){
+		if ($field === 'published' && !empty($BLOCKS['PUBLISH'])) {
+			echo
+'	<div class="paragraph">
+		<label class="title"><?= Html_Form::checkbox(array(\'name\' => \'published\', \'value\' => \'1\', \'checked\' => $this->published)); ?> Опубликовано</label>
+	</div>
+';
+			continue;
+		}
 		echo
 '	<div class="paragraph">
 		<label class="title">'.$title.'</label>
 		'.$this->getEditTplInput($INPUT_TYPES[$field], $field).'
 	</div>
-';	}
+';
+	}
 }
 ?>
 
