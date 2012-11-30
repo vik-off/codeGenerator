@@ -15,23 +15,26 @@ $s = $this->data;
 
 	function tblNameEdit(){
 		var table = ge('tablename').value.toLowerCase();
-		ge('modulename').value = table;
-		ge('modelclass').value = capitalize(table) + '_Model';
-		ge('controlclass').value = capitalize(table) + '_Controller';
-		ge('admcontrolclass').value = capitalize(table) + '_AdminController';
-		ge('moduledir').value = capitalize(table);
-		ge('frontsection').value = module2url(table);
-		ge('admsection').value = 'content/' + module2url(table);
+		var module = table.replace(/_/g, '-');
+		var classPrefix = (module.split('-').map(function(str){ return capitalize(str.toLowerCase()); })).join('');
+		ge('modulename').value = module;
+		ge('modelclass').value = classPrefix + '_Model';
+		ge('controlclass').value = classPrefix + '_Controller';
+		ge('admcontrolclass').value = classPrefix + '_AdminController';
+		ge('moduledir').value = classPrefix;
+		ge('frontsection').value = module;
+		ge('admsection').value = 'content/' + module;
 	}
 
 	function moduleNameEdit(){
 		var module = ge('modulename').value;
-		ge('modelclass').value = capitalize(module) + '_Model';
-		ge('controlclass').value = capitalize(module) + '_Controller';
-		ge('admcontrolclass').value = capitalize(module) + '_AdminController';
-		ge('moduledir').value = capitalize(module);
-		ge('frontsection').value = module2url(module);
-		ge('admsection').value = 'content/' + module2url(module);
+		var classPrefix = (module.split('-').map(function(str){ return capitalize(str.toLowerCase()); })).join('');
+		ge('modelclass').value =classPrefix + '_Model';
+		ge('controlclass').value =classPrefix + '_Controller';
+		ge('admcontrolclass').value =classPrefix + '_AdminController';
+		ge('moduledir').value =classPrefix;
+		ge('frontsection').value = module;
+		ge('admsection').value = 'content/' + module;
 	}
 
 	function openStructParseWindow(){

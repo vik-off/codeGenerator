@@ -165,7 +165,7 @@ class __COLLECTION_CLASS__ extends ARCollection {
 		$sorter = new Sorter('id', 'DESC', $this->_sortableFieldsTitles);
 		$paginator = new Paginator('sql', array('*', 'FROM '.__CLASSNAME__::TABLE.' '.$where.' ORDER BY '.$sorter->getOrderBy()), 50);
 		
-		$data = db::get()->getAll($paginator->getSql(), array());
+		$data = db::get()->fetchAll($paginator->getSql(), array());
 		
 		foreach($data as &$row)
 			$row = __CLASSNAME__::forceLoad($row['id'], $row)->getAllFieldsPrepared();
@@ -181,7 +181,7 @@ class __COLLECTION_CLASS__ extends ARCollection {
 	public function getAll(){
 		
 		$where = $this->_getSqlFilter();
-		$data = db::get()->getAllIndexed('SELECT * FROM '.__CLASSNAME__::TABLE.' '.$where, 'id', array());
+		$data = db::get()->fetchAssoc('SELECT * FROM '.__CLASSNAME__::TABLE.' '.$where, 'id', array());
 		
 		foreach($data as &$row)
 			$row = __CLASSNAME__::forceLoad($row['id'], $row)->getAllFieldsPrepared();
@@ -190,5 +190,3 @@ class __COLLECTION_CLASS__ extends ARCollection {
 	}
 	
 }
-
-?>

@@ -217,6 +217,7 @@ class FrontController extends Controller{
 			try{
 				$parser = new DbStructParser($str, $inputTypes[$inputType]);
 
+				$storage->data['tablename'] = $parser->getTableName();
 				$storage->data['tableStruct'] = $parser->getStructure();
 				$storage->data['validatIndividRules'] = $parser->getIndividualRules();
 				$storage->save();

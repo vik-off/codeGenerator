@@ -9,12 +9,37 @@
 
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
 	<script type="text/javascript" src="http://scripts.vik-off.net/debug.js"></script>
-	<script type="text/javascript" src="http://scripts.vik-off.net/plugins/jquery.simpleCheckbox.js"></script>
 	<script type="text/javascript">
 	
 		function href(href){
 			return 'index.php?r=' + href;
 		}
+		(function($){
+			$.fn.simpleCheckbox = function(o){
+				o = $.extend({
+					'hide': false,
+					'class': 'checked',
+				}, o);
+				this.each(function(){
+					if(!this.labels.length) return;
+					var t = $(this);
+					if(o.hide) t.css('display', 'none');
+					var labels = $([]);
+					for(var i = 0; i < this.labels.length; i++)
+						labels = labels.add(this.labels[i]);
+					t.data('simpleCheckbox', {labels: labels, class: o.class});
+					t.change(updateLabels);
+					updateLabels.call(this);
+				});
+				function updateLabels(){
+					var t = $(this);
+					var d = t.data('simpleCheckbox');
+					var method = t.attr('checked') ? 'addClass' : 'removeClass';
+					d.labels[method](d.class);
+				}
+				return this;
+			};
+		})(jQuery);
 		
 		$(function(){
 			
