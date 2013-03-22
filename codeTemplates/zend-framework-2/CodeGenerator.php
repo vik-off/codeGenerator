@@ -8,6 +8,8 @@ class CodeGenerator extends CodeGeneratorCommon {
 	protected $_module = null;
 	protected $_paths = array();
 
+	protected $_tplPath = null;
+
 	protected function _init(){
 
 		if (!empty($this->_data['implementPublished']))
@@ -23,6 +25,7 @@ class CodeGenerator extends CodeGeneratorCommon {
 			throw new Exception('Имя модуля не должно быть пустым');
 
 		$this->_module = ucfirst(strtolower($this->_data['modulename']));
+		$this->_tplPath = 'codeTemplates/'.$this->_template.'/templates/Module/';
 
 		$this->_generateSceleton();
 
@@ -65,12 +68,7 @@ class CodeGenerator extends CodeGeneratorCommon {
 		// сгенерировать шаблон delete
 		if(!empty($files['tpl-delete'])){
 
-			$this->generateTplDelete(
-				$this->_data['modulename'],
-				$this->_data['moduledir'],
-				$this->_data['fieldsTitles'],
-				$this->_data['admSection']
-			);
+			$this->generateTplDelete();
 			$successMsg .= '<p>Файл Шаблона delete сохранен!</p>';
 		}
 		
@@ -108,7 +106,6 @@ class CodeGenerator extends CodeGeneratorCommon {
 	{
 		$paths = $this->_getPaths();
 
-		$this->createDir($paths['module']);
 		$this->createDir($paths['src']);
 		$this->createDir($paths['view']);
 
@@ -116,7 +113,7 @@ class CodeGenerator extends CodeGeneratorCommon {
 			'__MODULE__'     => $this->_module,
 			'__MODELNAME__'  => $this->_data['modelclass'],
 		);
-		$tpl = 'codeTemplates/'.$this->_template.'/templates/Module/Module.php';
+		$tpl = $this->_tplPath.'Module.php';
 		$content = $this->parsePhpTemplate($tpl, $placeholders, $this->_blocks);
 		$this->createFile($this->_getPaths('root'), 'Module.php', $content);
 	}
@@ -128,7 +125,7 @@ class CodeGenerator extends CodeGeneratorCommon {
 			'__CLASSNAME__' 			=> $this->_data['modelclass'],
 			'__TABLENAME__' 			=> $this->_data['tablename'],
 		);
-		$tpl = 'codeTemplates/'.$this->_template.'/templates/Module/src/Module/Model/model.php';
+		$tpl = $this->_tplPath.'src/Module/Model/model.php';
 		$content = $this->parsePhpTemplate($tpl, $placeholders, $this->_blocks);
 
 		$this->createFile($this->_getPaths('model'), $this->_data['modelclass'].'.php', $content);
@@ -144,12 +141,12 @@ class CodeGenerator extends CodeGeneratorCommon {
 			'__ROUTENAME__'         => $this->_data['routename'],
 			'__ADMVIEW_PATH__'      => $this->_getPaths('rel-view-admin'),
 		);
-		$tpl1 = 'codeTemplates/'.$this->_template.'/templates/Module/src/Module/Controller/controller.php';
+		$tpl1 = $this->_tplPath.'src/Module/Controller/controller.php';
 		$content = $this->parsePhpTemplate($tpl1, $placeholders, $this->_blocks);
 		$this->createFile($this->_getPaths('controller'), $this->_data['controlclass'].'.php', $content);
 
 		$placeholders['__CONTROLLERNAME__'] = $this->_data['admcontrolclass'];
-		$tpl2 = 'codeTemplates/'.$this->_template.'/templates/Module/src/Module/Controller/adminController.php';
+		$tpl2 = $this->_tplPath.'src/Module/Controller/adminController.php';
 		$contentAdmin = $this->parsePhpTemplate($tpl2, $placeholders, $this->_blocks);
 		$this->createFile($this->_getPaths('controller'), $this->_data['admcontrolclass'].'.php', $contentAdmin);
 	}
@@ -165,14 +162,14 @@ class CodeGenerator extends CodeGeneratorCommon {
 			'__ROUTENAME__'         => $this->_data['routename'],
 		);
 		
-		$tpl = 'codeTemplates/'.$this->_template.'/Module/config/module.config.php';
+		$tpl = $this->_tplPath.'config/module.config.php';
 		$content = $this->parsePhpTemplate($tpl, $placeholders, $this->_blocks);
 		$this->createFile($this->_getPaths('config'), 'config.php', $content);
 	}
 	
 	public function generateTplAdminList()
 	{
-		$tpl = 'codeTemplates/'.$this->_template.'/Module/view/module/admin/index.php';
+		$tpl = $this->_tplPath.'view/module/admin/index.php';
 		$content = $this->parseHtmlTemplate($tpl, array(
 			'ROUTENAME'         => $this->_data['routename'],
 			'FIELDSTITLES'      => $this->_data['fieldsTitles'],
@@ -182,7 +179,7 @@ class CodeGenerator extends CodeGeneratorCommon {
 	
 	public function generateTplList()
 	{
-		$tpl = 'codeTemplates/'.$this->_template.'/Module/view/module/index.php';
+		$tpl = $this->_tplPath.'view/module/index.php';
 		$content = $this->parseHtmlTemplate($tpl, array(
 			'ROUTENAME'         => $this->_data['routename'],
 			'FIELDSTITLES'      => $this->_data['fieldsTitles'],
@@ -192,7 +189,7 @@ class CodeGenerator extends CodeGeneratorCommon {
 
 	public function generateTplEdit()
 	{
-		$tpl = 'codeTemplates/'.$this->_template.'/Module/view/module/admin/edit.php';
+		$tpl = $this->_tplPath.'view/module/admin/edit.php';
 		$content = $this->parseHtmlTemplate($tpl, array(
 			'MODULE'			=> $this->_module,
 			'FORMCLASS'         => "Edit{$this->_module}Form",
@@ -204,13 +201,17 @@ class CodeGenerator extends CodeGeneratorCommon {
 	
 	public function generateTplDelete()
 	{
-		$tpl = 'codeTemplates/'.$this->_template.'/Module/view/module/admin/remove.php';
+		$tpl = $this->_tplPath.'view/module/admin/remove.php';
 		$content = $this->parseHtmlTemplate($tpl, array(
 			'ROUTENAME' => $this->_data['routename'],
 		));
 		$this->createFile($this->_getPaths('view-admin'), 'remove.php', $content);
 	}
 
-}
+	public function createFile($path, $name, $content)
+	{
+		$path = "output/$path";
+		parent::createFile($path, $name, $content);
+	}
 
-?>
+}
