@@ -1,0 +1,41 @@
+<?php
+echo
+'<?php
+
+/** @var $form \\'.$MODULE.'\Form\\'.$FORMCLASS.' */
+$form->prepare();
+$form->setAttribute(\'class\', \'form-horizontal\');
+
+$urlList = $this->url(\'zfcadmin/'.$ROUTENAME.'\');
+?>
+
+<h2>Create new record</h2>
+
+<ul class="breadcrumb">
+	<li class="pull-right"><a href="<?= $urlList; ?>">Back to the list</a></li>
+	<li></li>
+</ul>
+
+<?= $this->messagesShow(); ?>
+
+<?= $this->form()->openTag($form); ?>
+
+	<?php if ($form->has(\'id\')) { ?>
+		<?= $this->formElement($form->get(\'id\')); ?>
+	<?php } ?>
+';
+
+foreach ($FIELDS as $f)
+	echo "\t<?= \$this->formRowCustom(\$form->get('$f')); ?>\n\n";
+
+echo
+'	<div class="control-group">
+		<div class="controls">
+			<button type="submit" class="btn btn-primary">Save</button>
+			<a href="<?= $urlList; ?>" class="btn">Cancel</a>
+		</div>
+	</div>
+
+<?= $this->form()->closeTag(); ?>
+
+';

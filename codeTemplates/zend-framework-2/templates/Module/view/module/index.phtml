@@ -1,0 +1,45 @@
+<?php
+/** @var array $FIELDSTITLES */
+/** @var string $ROUTENAME */
+
+echo
+'<?php
+/** @var $this Zend\View\Renderer\PhpRenderer */
+$urlCreate = $this->url(\''.$ROUTENAME.'\', array(\'action\' => \'create\'));
+?>
+<h2>Records</h2>
+
+<?= $this->messagesShow(); ?>
+
+<?php if (count($this->items)) { ?>
+
+	<table class="table table-striped table-bordered">
+	<tr>
+';
+foreach ($FIELDSTITLES as $title)
+	echo "\t\t<th>$title</th>\n";
+
+echo
+'		<th>Options</th>
+	</tr>
+	<?php foreach ($this->items as $item) { ?>
+		<?php
+		$urlView = $this->url(\''.$ROUTENAME.'\', array(\'action\' => \'view\', \'id\' => $item->id));
+		?>
+		<tr>
+';
+foreach ($FIELDSTITLES as $field => $title)
+	echo "\t\t\t<td><?= \$item->$field; ?></td>\n";
+
+echo
+'			<td>
+				<a href="<?= $urlView; ?>">view</a>
+			</td>
+		</tr>
+	<?php } ?>
+	</table>
+
+<?php } else { ?>
+	<p>There are no saved records</p>
+<?php } ?>
+';

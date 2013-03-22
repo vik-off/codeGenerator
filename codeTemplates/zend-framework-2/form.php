@@ -15,26 +15,24 @@ $s = $this->data;
 
 	function tblNameEdit(){
 		var table = ge('tablename').value.toLowerCase();
-		var module = table.replace(/_/g, '-');
-		var classPrefix = (module.split('-').map(function(str){ return capitalize(str.toLowerCase()); })).join('');
+		var module = (table.split('_').map(function(str){ return capitalize(str.toLowerCase()); })).join('');
+		var classPrefix = module;
+		var route = module.substr(0, 1).toLowerCase() + module.substr(1);
 		ge('modulename').value = module;
-		ge('modelclass').value = classPrefix + '_Model';
-		ge('controlclass').value = classPrefix + '_Controller';
-		ge('admcontrolclass').value = classPrefix + '_AdminController';
-		ge('moduledir').value = classPrefix;
-		ge('frontsection').value = module;
-		ge('admsection').value = 'content/' + module;
+		ge('modelclass').value = module + 'Table';
+		ge('controlclass').value = classPrefix + 'Controller';
+		ge('admcontrolclass').value = 'Admin' + classPrefix + 'Controller';
+		ge('routename').value = route;
 	}
 
 	function moduleNameEdit(){
 		var module = ge('modulename').value;
-		var classPrefix = (module.split('-').map(function(str){ return capitalize(str.toLowerCase()); })).join('');
-		ge('modelclass').value =classPrefix + '_Model';
-		ge('controlclass').value =classPrefix + '_Controller';
-		ge('admcontrolclass').value =classPrefix + '_AdminController';
-		ge('moduledir').value =classPrefix;
-		ge('frontsection').value = module;
-		ge('admsection').value = 'content/' + module;
+		var classPrefix = module;
+		var route = module.substr(0, 1).toLowerCase() + module.substr(1);
+		ge('modelclass').value = module + 'Table';
+		ge('controlclass').value = classPrefix + 'Controller';
+		ge('admcontrolclass').value = 'Admin' + classPrefix + 'Controller';
+		ge('routename').value = route;
 	}
 
 	function openStructParseWindow(){
@@ -107,7 +105,7 @@ $s = $this->data;
 		<td>Модуль</td>
 		<td>
 			<input id="modulename" type="text" name="modulename" value="<?=getVar($s['modulename']);?>">
-			как правило, с маленькой буквы в единственном числе
+			как правило, с маленькой буквы во множественном числе
 		</td>
 	</tr><tr>
 		<td>Класс модели</td>
@@ -116,23 +114,11 @@ $s = $this->data;
 		<td>Класс контроллера</td>
 		<td><input id="controlclass" type="text" name="controlclass" value="<?=getVar($s['controlclass']);?>"></td>
 	</tr><tr>
-		<td>Класс контроллера</td>
+		<td>Класс адм. контроллера</td>
 		<td><input id="admcontrolclass" type="text" name="admcontrolclass" value="<?=getVar($s['admcontrolclass']);?>"></td>
 	</tr><tr>
-		<td>Папка модуля</td>
-		<td><input id="moduledir" type="text" name="moduledir" value="<?=getVar($s['moduledir']);?>"></td>
-	</tr><tr>
-		<td>Заголовок модуля</td>
-		<td>
-			<input id="moduletitle" type="text" name="moduletitle" value="<?=getVar($s['moduletitle']);?>">
-			как правило, во множественном числе
-		</td>
-	</tr><tr>
-		<td>Раздел фронтенда</td>
-		<td><input id="frontsection" type="text" name="frontsection" value="<?=getVar($s['frontsection']);?>"></td>
-	</tr><tr>
-		<td>Раздел бекенда</td>
-		<td><input id="admsection" type="text" name="admSection" value="<?=getVar($s['admSection']);?>"></td>
+		<td>Имя маршрута</td>
+		<td><input id="routename" type="text" name="routename" value="<?=getVar($s['routename']);?>"></td>
 	</tr><tr>
 		<td>Поля</td>
 		<td>
@@ -171,26 +157,6 @@ $s = $this->data;
 			<? endif; ?>
 		</td>
 	</tr><tr>
-		<td>Правила валидации<br /></td>
-		<td>
-			<textarea name="strValidatIndividRules" style="width: 900px; height: 150px;"><?
-				if(!empty($s['strValidatIndividRules'])){
-					echo $s['strValidatIndividRules'];
-				}elseif(!empty($s['validatIndividRules'])){
-					echo DbStructParser::getArrStr($s['validatIndividRules'], "\t\t");
-				}
-				?></textarea>
-		</td>
-	</tr><tr>
-		<td></td>
-		<td>
-			<?= Inp::checkbox('useHtmlForm', !empty($s['useHtmlForm']),
-				              'Использовать класс Html_Form для вывода полей форм'); ?>
-			<br />
-			<?= Inp::checkbox('implementPublished', !empty($s['implementPublished']),
-				              'Внедрить обработку поля <b>published</b>'); ?>
-		</td>
-	</tr><tr>
 		<td></td>
 		<td><input type="submit" name="step1save" value="Сохранить"></td>
 	</tr>
@@ -215,9 +181,9 @@ $s = $this->data;
 		<tr valign="top">
 			<td>
 				<b style="font-size: 16px;">Model</b>
-				<div class="<?= !empty($s['modelclass']) ? 'green' : 'red'; ?>">Имя модели</div>
-				<div class="<?= !empty($s['tablename']) ? 'green' : 'red'; ?>">Имя таблицы БД</div>
-				<div class="<?=! empty($s['strValidatIndividRules']) ? 'green' : ''; ?>">Правила валидации</div>
+				<div class="<?=!empty($s['modelclass']) ? 'green' : 'red'; ?>">Имя модели</div>
+				<div class="<?=!empty($s['tablename']) ? 'green' : 'red'; ?>">Имя таблицы БД</div>
+				<div class="<?=!empty($s['strValidatIndividRules']) ? 'green' : ''; ?>">Правила валидации</div>
 			</td><td>
 			<b style="font-size: 16px;">Controller</b><br />
 			<div class="<?=strlen($s['controlclass']) > 10 ? 'green' : 'red'; ?>">Имя контроллера</div>
@@ -248,11 +214,12 @@ $s = $this->data;
 
 			<? if(!empty($s['template'])): ?>
 				<table style="font-size: 12px;">
-					<tr><td>admin-list:</td><td><select name="files[tpl-admin-list]"><?=getHtmlTempateTypesList($s['files']['tpl-admin-list'], 'te');?></select></td></tr>
-					<tr><td>list:</td><td><select name="files[tpl-list]"><?=getHtmlTempateTypesList(getVar($s['files']['tpl-list']));?></select></td></tr>
-					<tr><td>view:</td><td><select name="files[tpl-view]"><?=getHtmlTempateTypesList(getVar($s['files']['tpl-view']));?></select></td></tr>
-					<tr><td>edit:</td><td><select name="files[tpl-edit]"><?=getHtmlTempateTypesList(getVar($s['files']['tpl-edit']));?></select></td></tr>
-					<tr><td>delete:</td><td><select name="files[tpl-delete]"><?=getHtmlTempateTypesList(getVar($s['files']['tpl-delete']), 'de');?></select></td></tr>
+
+					<tr><td>admin-list:</td><td><?=Inp::checkbox('files[tpl-admin-list]', !empty($s['files']['tpl-admin-list']));?></td></tr>
+					<tr><td>list:</td><td><?=Inp::checkbox('files[tpl-list]', !empty($s['files']['tpl-list']));?></td></tr>
+					<tr><td>view:</td><td><?=Inp::checkbox('files[tpl-view]', !empty($s['files']['tpl-view']));?></td></tr>
+					<tr><td>edit:</td><td><?=Inp::checkbox('files[tpl-edit]', !empty($s['files']['tpl-edit']));?></td></tr>
+					<tr><td>delete:</td><td><?=Inp::checkbox('files[tpl-delete]', !empty($s['files']['tpl-delete']));?></td></tr>
 				</table>
 				<? endif; ?>
 
