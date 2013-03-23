@@ -1,0 +1,17 @@
+<?php
+/** @var string $ROUTENAME */
+
+echo
+'<?php
+$urlList = $this->url(\'zfcadmin/'.$ROUTENAME.'\');
+?>
+
+<h2>Remove Record</h2>
+
+<p>Do you realy want to delete record <b>#<?= $this->item->id; ?></b>?</p>
+
+<form action="" method="post">
+	<input type="submit" name="remove" value="Delete" class="btn btn-primary">
+	<a href="<?= $urlList; ?>" class="btn">Cancel</a>
+</form>
+';

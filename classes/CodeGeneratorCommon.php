@@ -1,6 +1,6 @@
 <?
 
-class CodeGeneratorCommon {
+abstract class CodeGeneratorCommon {
 	
 	
 	protected $_template = null;
@@ -24,17 +24,28 @@ class CodeGeneratorCommon {
 	protected function _init(){}
 	
 	/** СГЕНЕРИРОВАТЬ ВСЕ НЕОБХОДИМЫЕ ФАЙЛЫ */
-	public function generateAll($files){}
-	
-	// ФУНКЦИЯ СОЗДАНИЯ ФАЙЛА
-	public function createFile($path, $file, $content){
-	
+	abstract public function generateAll($files);
+
+	/**
+	 * создание файла
+	 * @param $path
+	 * @param $name
+	 * @param $content
+	 */
+	public function createFile($path, $name, $content)
+	{
 		if(!is_dir($path))
 			mkdir($path, 0777, true);
 			
-		$f = fopen($path.$file, 'w') or die('Невозможно открыть файл для сохранения модели');
+		$f = fopen($path.$name, 'w') or die('Невозможно открыть файл для сохранения модели');
 		fwrite($f, $content) or die('Невозможно произвести запись в файл для сохранения модели');
 		fclose($f);
+	}
+
+	public function createDir($path)
+	{
+		if(!is_dir($path))
+			mkdir($path, 0777, true);
 	}
 	
 	// ФУНКЦИЯ ОЧИСТКИ ДИРЕКТОРИИ
