@@ -209,7 +209,7 @@ $s = $this->data;
 	<table border="1" style="font-size: 12px; margin: auto;">
 		<tr>
 			<td colspan="4" align="center">
-				<div class="<?=strlen($s['template']) ? 'green' : 'red'; ?>">Шаблон</div>
+				<div class="<?=!empty($s['template']) ? 'green' : 'red'; ?>">Шаблон</div>
 			</td>
 		</tr>
 		<tr valign="top">
@@ -231,9 +231,7 @@ $s = $this->data;
 		</tr>
 		<tr valign="top">
 			<td>      <!-- МОДЕЛЬ -->
-				<? if(!empty($s['modelclass']) &&
-					!empty($s['template']) &&
-					!empty($s['tablename'])): ?>
+				<? if(!empty($s['modelclass']) && !empty($s['template']) && !empty($s['tablename'])): ?>
 					<p><label><input type="checkbox" name="files[model]" value="1" <?=(getVar($s['files']['model']) ? 'checked="checked"' : '');?> /> Сгенерировать</label></p>
 					<? endif; ?>
 			</td><td> <!-- КОНТРОЛЛЕР -->
@@ -248,7 +246,7 @@ $s = $this->data;
 
 			<? if(!empty($s['template'])): ?>
 				<table style="font-size: 12px;">
-					<tr><td>admin-list:</td><td><select name="files[tpl-admin-list]"><?=getHtmlTempateTypesList($s['files']['tpl-admin-list'], 'te');?></select></td></tr>
+					<tr><td>admin-list:</td><td><select name="files[tpl-admin-list]"><?=getHtmlTempateTypesList(getVar($s['files']['tpl-admin-list']), 'te');?></select></td></tr>
 					<tr><td>list:</td><td><select name="files[tpl-list]"><?=getHtmlTempateTypesList(getVar($s['files']['tpl-list']));?></select></td></tr>
 					<tr><td>view:</td><td><select name="files[tpl-view]"><?=getHtmlTempateTypesList(getVar($s['files']['tpl-view']));?></select></td></tr>
 					<tr><td>edit:</td><td><select name="files[tpl-edit]"><?=getHtmlTempateTypesList(getVar($s['files']['tpl-edit']));?></select></td></tr>

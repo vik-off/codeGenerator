@@ -25,19 +25,31 @@ class __CLASSNAME__ extends ActiveRecord {
 	const NOT_FOUND_MESSAGE = 'Страница не найдена';
 
 	
-	/** точка входа в класс (создание нового объекта) */
+	/**
+	 * создание нового пустого объекта
+	 * @return __CLASSNAME__
+	 */
 	public static function create(){
 			
 		return new __CLASSNAME__(0, self::INIT_NEW);
 	}
 	
-	/** точка входа в класс (загрузка существующего объекта) */
+	/**
+	 * загрузка существующего объекта по id
+	 * @param int $id
+	 * @return __CLASSNAME__
+	 */
 	public static function load($id){
 		
 		return new __CLASSNAME__($id, self::INIT_EXISTS);
 	}
 	
-	/** точка входа в класс (загрузка существующего объекта) */
+	/**
+	 * загрузка существующего объекта по переданным данным
+	 * @param int $id
+	 * @param array $fieldvalues - массив данных
+	 * @return __CLASSNAME__
+	 */
 	public static function forceLoad($id, $fieldvalues){
 		
 		return new __CLASSNAME__($id, self::INIT_EXISTS_FORCE, $fieldvalues);
@@ -145,7 +157,11 @@ class __COLLECTION_CLASS__ extends ARCollection {
 	protected $_sortableFieldsTitles = array(__SORTABLE_FIELDS__	);
 	
 	
-	/** точка входа в класс */
+	/**
+	 * @param array $filters
+	 * @param array $options
+	 * @return __COLLECTION_CLASS__
+	 */
 	public static function load($filters = array(), $options = array()){
 			
 		return new __COLLECTION_CLASS__($filters, $options);
@@ -165,7 +181,7 @@ class __COLLECTION_CLASS__ extends ARCollection {
 		$sorter = new Sorter('id', 'DESC', $this->_sortableFieldsTitles);
 		$paginator = new Paginator('sql', array('*', 'FROM '.__CLASSNAME__::TABLE.' '.$where.' ORDER BY '.$sorter->getOrderBy()), 50);
 		
-		$data = db::get()->fetchAll($paginator->getSql(), array());
+		$data = db::get()->fetchAll($paginator->getSql());
 		
 		foreach($data as &$row)
 			$row = __CLASSNAME__::forceLoad($row['id'], $row)->getAllFieldsPrepared();
@@ -181,7 +197,7 @@ class __COLLECTION_CLASS__ extends ARCollection {
 	public function getAll(){
 		
 		$where = $this->_getSqlFilter();
-		$data = db::get()->fetchAssoc('SELECT * FROM '.__CLASSNAME__::TABLE.' '.$where, 'id', array());
+		$data = db::get()->fetchAssoc('SELECT * FROM '.__CLASSNAME__::TABLE.' '.$where, 'id');
 		
 		foreach($data as &$row)
 			$row = __CLASSNAME__::forceLoad($row['id'], $row)->getAllFieldsPrepared();

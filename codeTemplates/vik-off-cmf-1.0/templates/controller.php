@@ -83,5 +83,3 @@ class __CONTROLLERNAME__ extends Controller {
 	
 	
 }
-
-?>
