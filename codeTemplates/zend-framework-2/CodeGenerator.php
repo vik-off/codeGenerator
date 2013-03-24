@@ -33,6 +33,8 @@ class CodeGenerator extends CodeGeneratorCommon {
 		if(!empty($files['model'])){
 			$this->_generateModel();
 			$successMsg .= '<p>Файл модели сохранен!</p>';
+			$this->_generateForm();
+			$successMsg .= '<p>Файл формы сохранен!</p>';
 		}
 
 		// сгенерировать контроллер
@@ -129,6 +131,17 @@ class CodeGenerator extends CodeGeneratorCommon {
 		$content = $this->parsePhpTemplate($tpl, $placeholders, $this->_blocks);
 
 		$this->createFile($this->_getPaths('model'), $this->_data['modelclass'].'.php', $content);
+	}
+
+	protected function _generateForm()
+	{
+		$tpl = $this->_tplPath.'src/Module/Form/form.php';
+		$content = $this->parseHtmlTemplate($tpl, array(
+			'MODULE'			=> $this->_module,
+			'FORMNAME'          => "Edit{$this->_module}Form",
+			'FIELDSTITLES'      => $this->_data['fieldsTitles'],
+		));
+		$this->createFile($this->_getPaths('view'), 'index.php', $content);
 	}
 
 	public function generateController()

@@ -5,7 +5,7 @@
 
 namespace __MODULE__;
 
-use Zend\Db\ResultSet\ResultSet;
+use \Zend\Db\ResultSet\ResultSet;
 
 class Module
 {
