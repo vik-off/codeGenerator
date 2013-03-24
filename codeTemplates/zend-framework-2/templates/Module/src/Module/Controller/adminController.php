@@ -7,7 +7,7 @@
 %%%		__ADMVIEW_PATH__
 <?php
 
-namespace Pages\Controller;
+namespace __MODULE__\Controller;
 
 use \Zend\Mvc\Controller\AbstractActionController;
 use \Zend\View\Model\ViewModel;
@@ -82,17 +82,17 @@ class __CONTROLLERNAME__ extends AbstractActionController
 
 	public function removeAction()
 	{
-		$page = $this->_getModel()->loadById($this->params('id'));
+		$record = $this->_getModel()->loadById($this->params('id'));
 		if ($this->getRequest()->isPost()) {
 			if ($this->params()->fromPost('remove')) {
-				$page->delete();
+				$record->delete();
 				$this->flashMessenger()->addSuccessMessage('record deleted');
 				$this->redirect()->toRoute('zfcadmin/__ROUTENAME__');
 			}
 		}
 
 		return array(
-			'page' => $page,
+			'item' => $record,
 		);
 	}
 

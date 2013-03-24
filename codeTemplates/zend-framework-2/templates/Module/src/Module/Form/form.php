@@ -1,7 +1,7 @@
 <?php
 /** @var string $MODULE */
 /** @var string $FORMNAME */
-/** @var array $FIELDSTITLESE */
+/** @var array $FIELDSTITLES */
 
 echo
 '<?php
@@ -16,20 +16,21 @@ class '.$FORMNAME.' extends BaseForm
 	{
 		$elements = array(
 ';
-if (isset($FIELDSTITLESE['id'])) {
-	unset($FIELDSTITLESE['id']);
+if (isset($FIELDSTITLES['id'])) {
+	unset($FIELDSTITLES['id']);
 	echo
 '			\'id\' => array(
 				\'type\' => \'hidden\',
-				\'required\' => false,
+				\'required\' => true,
 				\'filters\' => array(
 					array(\'name\' => \'Int\'),
 				)
 			),
+
 ';
 }
 
-foreach ($FIELDSTITLESE as $field => $title) {
+foreach ($FIELDSTITLES as $field => $title) {
 echo
 '			\''.$field.'\' => array(
 				\'type\' => \'text\',
@@ -48,10 +49,13 @@ echo
 					),
 				),
 			),
+
 ';
 }
 echo
-'		if (!$this->_existsRecord) {
+'		);
+
+		if (!$this->_existsRecord) {
 			unset($elements[\'id\']);
 		}
 

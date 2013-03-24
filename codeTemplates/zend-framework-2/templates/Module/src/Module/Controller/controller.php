@@ -8,9 +8,9 @@
 
 namespace __MODULE__\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\Mvc\Controller\Action;
-use Zend\View\Model\ViewModel;
+use \Zend\Mvc\Controller\AbstractActionController;
+use \Zend\Mvc\Controller\Action;
+use \Zend\View\Model\ViewModel;
 
 class __CONTROLLERNAME__ extends AbstractActionController
 {

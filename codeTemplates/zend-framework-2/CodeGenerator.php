@@ -84,7 +84,7 @@ class CodeGenerator extends CodeGeneratorCommon {
 		if (!$this->_paths) {
 			$pathSrc = "$this->_module/src/$this->_module";
 			$pathView = "$this->_module/view/$moduleLower";
-			$pathRelView = "$this->_module";
+			$pathRelView = "$moduleLower";
 			$this->_paths = array(
 				"root"       => "$this->_module/",
 				'config'     => "$this->_module/config/",
@@ -94,9 +94,9 @@ class CodeGenerator extends CodeGeneratorCommon {
 				'form'       => "$pathSrc/Form/",
 
 				'view'       => "$pathView/",
-				'view-admin' => "$pathView/admin/",
+				'view-admin' => "$pathView/admin-$moduleLower/",
 				'rel-view'   => "$pathRelView/",
-				'rel-view-admin' => "$pathRelView/admin/"
+				'rel-view-admin' => "$pathRelView/admin-$moduleLower/"
 			);
 		}
 
@@ -106,11 +106,6 @@ class CodeGenerator extends CodeGeneratorCommon {
 
 	protected function _generateSceleton()
 	{
-		$paths = $this->_getPaths();
-
-		$this->createDir($paths['src']);
-		$this->createDir($paths['view']);
-
 		$placeholders = array(
 			'__MODULE__'     => $this->_module,
 			'__MODELNAME__'  => $this->_data['modelclass'],
@@ -135,13 +130,14 @@ class CodeGenerator extends CodeGeneratorCommon {
 
 	protected function _generateForm()
 	{
+		$formClass = "Edit{$this->_module}Form";
 		$tpl = $this->_tplPath.'src/Module/Form/form.php';
 		$content = $this->parseHtmlTemplate($tpl, array(
 			'MODULE'			=> $this->_module,
-			'FORMNAME'          => "Edit{$this->_module}Form",
+			'FORMNAME'          => $formClass,
 			'FIELDSTITLES'      => $this->_data['fieldsTitles'],
 		));
-		$this->createFile($this->_getPaths('view'), 'index.php', $content);
+		$this->createFile($this->_getPaths('form'), $formClass.'.php', $content);
 	}
 
 	public function generateController()
@@ -177,48 +173,48 @@ class CodeGenerator extends CodeGeneratorCommon {
 		
 		$tpl = $this->_tplPath.'config/module.config.php';
 		$content = $this->parsePhpTemplate($tpl, $placeholders, $this->_blocks);
-		$this->createFile($this->_getPaths('config'), 'config.php', $content);
+		$this->createFile($this->_getPaths('config'), 'module.config.php', $content);
 	}
 	
 	public function generateTplAdminList()
 	{
-		$tpl = $this->_tplPath.'view/module/admin/index.php';
+		$tpl = $this->_tplPath.'view/module/admin/index.phtml';
 		$content = $this->parseHtmlTemplate($tpl, array(
 			'ROUTENAME'         => $this->_data['routename'],
 			'FIELDSTITLES'      => $this->_data['fieldsTitles'],
 		));
-		$this->createFile($this->_getPaths('view-admin'), 'index.php', $content);
+		$this->createFile($this->_getPaths('view-admin'), 'index.phtml', $content);
 	}
 	
 	public function generateTplList()
 	{
-		$tpl = $this->_tplPath.'view/module/index.php';
+		$tpl = $this->_tplPath.'view/module/index.phtml';
 		$content = $this->parseHtmlTemplate($tpl, array(
 			'ROUTENAME'         => $this->_data['routename'],
 			'FIELDSTITLES'      => $this->_data['fieldsTitles'],
 		));
-		$this->createFile($this->_getPaths('view'), 'index.php', $content);
+		$this->createFile($this->_getPaths('view'), 'index.phtml', $content);
 	}
 
 	public function generateTplEdit()
 	{
-		$tpl = $this->_tplPath.'view/module/admin/edit.php';
+		$tpl = $this->_tplPath.'view/module/admin/edit.phtml';
 		$content = $this->parseHtmlTemplate($tpl, array(
 			'MODULE'			=> $this->_module,
 			'FORMCLASS'         => "Edit{$this->_module}Form",
 			'ROUTENAME'         => $this->_data['routename'],
 			'FIELDS'            => array_keys($this->_data['fieldsTitles']),
 		));
-		$this->createFile($this->_getPaths('view-admin'), 'edit.php', $content);
+		$this->createFile($this->_getPaths('view-admin'), 'edit.phtml', $content);
 	}
 	
 	public function generateTplDelete()
 	{
-		$tpl = $this->_tplPath.'view/module/admin/remove.php';
+		$tpl = $this->_tplPath.'view/module/admin/remove.phtml';
 		$content = $this->parseHtmlTemplate($tpl, array(
 			'ROUTENAME' => $this->_data['routename'],
 		));
-		$this->createFile($this->_getPaths('view-admin'), 'remove.php', $content);
+		$this->createFile($this->_getPaths('view-admin'), 'remove.phtml', $content);
 	}
 
 	public function createFile($path, $name, $content)
