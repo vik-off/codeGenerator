@@ -5,7 +5,7 @@
 echo
 '<?php
 /** @var $this Zend\View\Renderer\PhpRenderer */
-$urlCreate = $this->url(\'zfcadmin/'.$ROUTENAME.'\', array(\'action\' => \'create\'));
+$urlCreate = $this->url(\'admin/'.$ROUTENAME.'\', array(\'action\' => \'create\'));
 ?>
 <h2>Records</h2>
 
@@ -30,8 +30,8 @@ echo
 	<?php foreach ($this->items as $item) { ?>
 		<?php
 		$urlView = $this->url(\''.$ROUTENAME.'\', array(\'action\' => $item->id));
-		$urlEdit = $this->url(\'zfcadmin/'.$ROUTENAME.'/query\', array(\'action\' => \'edit\', \'id\' => $item->id));
-		$urlDel = $this->url(\'zfcadmin/'.$ROUTENAME.'/query\', array(\'action\' => \'remove\', \'id\' => $item->id));
+		$urlEdit = $this->url(\'admin/'.$ROUTENAME.'/query\', array(\'action\' => \'edit\', \'id\' => $item->id));
+		$urlDel = $this->url(\'admin/'.$ROUTENAME.'/query\', array(\'action\' => \'remove\', \'id\' => $item->id));
 		?>
 		<tr>
 ';

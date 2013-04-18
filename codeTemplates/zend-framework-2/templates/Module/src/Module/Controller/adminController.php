@@ -9,11 +9,12 @@
 
 namespace __MODULE__\Controller;
 
-use \Zend\Mvc\Controller\AbstractActionController;
+use \ZfcAdmin\Controller\AdminController;
+use \App\ActiveRecord\ValidationException;
 use \Zend\View\Model\ViewModel;
 use \__MODULE__\Form\__FORMNAME__;
 
-class __CONTROLLERNAME__ extends AbstractActionController
+class __CONTROLLERNAME__ extends AdminController
 {
 	protected $_viewModel = null;
 
@@ -40,7 +41,7 @@ class __CONTROLLERNAME__ extends AbstractActionController
 				$row = $this->_getModel()->createRow($form->getData());
 				$row->save();
 				$this->flashMessenger()->addSuccessMessage('record created');
-				$this->redirect()->toRoute('zfcadmin/__ROUTENAME__');
+				return $this->redirect()->toRoute('admin/__ROUTENAME__');
 			} else {
 				$this->flashMessenger()->addErrorMessage('unable to create record');
 			}
@@ -64,9 +65,13 @@ class __CONTROLLERNAME__ extends AbstractActionController
 		if ($this->getRequest()->isPost()) {
 			$form->setData($this->params()->fromPost());
 			if ($form->isValid()) {
-				$model->populateRow($record)->save();
-				$this->flashMessenger()->addSuccessMessage('record saved');
-				$this->redirect()->toRoute('zfcadmin/__ROUTENAME__');
+				try {
+					$record->save();
+					$this->flashMessenger()->addSuccessMessage('record saved');
+					return $this->redirect()->toRoute('admin/__ROUTENAME__');
+				} catch (ValidationException $e) {
+					$this->flashMessenger()->addErrorMessage($e->getMessage());
+				}
 			} else {
 				$this->flashMessenger()->addErrorMessage('unable to save record');
 			}
@@ -87,7 +92,7 @@ class __CONTROLLERNAME__ extends AbstractActionController
 			if ($this->params()->fromPost('remove')) {
 				$record->delete();
 				$this->flashMessenger()->addSuccessMessage('record deleted');
-				$this->redirect()->toRoute('zfcadmin/__ROUTENAME__');
+				return $this->redirect()->toRoute('admin/__ROUTENAME__');
 			}
 		}
 

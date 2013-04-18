@@ -69,7 +69,7 @@ class FrontController extends Controller{
 	/** проверка авторизации */
 	private function _checkAuth(){
 		
-		if(getVar($_POST['action']) == 'login')
+		if(!empty($_POST['action']) && $_POST['action'] == 'login')
 			$this->action_login();
 		
 		// if(empty($_SESSION['logged']))
@@ -168,6 +168,20 @@ class FrontController extends Controller{
 
 		Layout::get()
 			->setContentPhpFile('table-structure.php', $vars)
+			->render();
+	}
+
+	public function display_test() {
+
+		if (!empty($_POST['structure'])) {
+			$parser = new DbStructParser($_POST['structure'], DbStructParser::SRC_CREATE);
+		}
+		$vars = array(
+			'structure_str' => !empty($_POST['structure']) ? $_POST['structure'] : '',
+			'structure_arr' => !empty($_POST['structure']) ? $parser : '',
+		);
+		Layout::get()
+			->setContentPhpFile('test.php', $vars)
 			->render();
 	}
 

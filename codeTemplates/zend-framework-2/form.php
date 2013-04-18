@@ -140,7 +140,7 @@ $s = $this->data;
 				<? $f = $row['Field'];?>
 				<tr>
 					<td><?=$f;?></td>
-					<td><input type="text" name="fieldsTitles[<?=$f;?>]" value="<?=isset($s['fieldsTitles'][$f]) ? $s['fieldsTitles'][$f] : $f;?>" /></td>
+					<td><input type="text" name="fieldsTitles[<?=$f;?>]" value="<?=isset($s['fieldsTitles'][$f]) ? $s['fieldsTitles'][$f] : str_replace('_', ' ', ucfirst($f));?>" /></td>
 					<td><?=Inp::checkbox('sortableFields['.$f.']', !isset($s['sortableFields'][$f]) || $s['sortableFields'][$f], '', array('class' => 'pretty'));?></td>
 					<td><?=Inp::checkbox('tplFields[admin-list]['.$f.']', !isset($s['tplFields']['admin-list'][$f]) || $s['tplFields']['admin-list'][$f], '', array('class' => 'pretty'));?></td>
 					<td><?=Inp::checkbox('tplFields[list]['.$f.']', !isset($s['tplFields']['list'][$f]) || $s['tplFields']['list'][$f], '', array('class' => 'pretty'));?></td>
@@ -242,11 +242,9 @@ $s = $this->data;
 <br />
 <br />
 
-</body>
-</html>
-
 <?
 echo'<pre>';
 //print_r($_SESSION);
 print_r($s);
+echo '</pre>';
 ?>

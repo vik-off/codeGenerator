@@ -97,7 +97,16 @@ class DbStructParser {
 		$fieldsDefArrRaw = explode(',', $fieldsDefStr);
 		$fieldsDefArrRich = array();
 		$primary_keys = array();
-		
+
+		foreach ($fieldsDefArrRaw as $index => $fieldDef) {
+			if (substr_count($fieldDef, '(') > substr_count($fieldDef, ')')) {
+				if (isset($fieldsDefArrRaw[$index + 1])) {
+					$fieldsDefArrRaw[$index] .= ','.$fieldsDefArrRaw[$index + 1];
+					unset($fieldsDefArrRaw[$index + 1]);
+				}
+			}
+		}
+
 		foreach($fieldsDefArrRaw as $fieldDef){
 			
 			$fieldDef = trim($fieldDef);
@@ -164,7 +173,8 @@ class DbStructParser {
 		$tableStructStr = trim($tableStructStr);
 			
 		if(preg_match('/^array/i', $tableStructStr)){
-		
+
+			$tableStructArr = '';
 			eval('$tableStructArr = '.$tableStructStr.';');
 			
 			if(!is_array($tableStructArr))

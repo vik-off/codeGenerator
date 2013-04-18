@@ -6,7 +6,7 @@
 
 namespace __MODULE__\Model;
 
-use Application\Model\BaseTable;
+use App\ActiveRecord\BaseTable;
 
 class __CLASSNAME__ extends BaseTable
 {

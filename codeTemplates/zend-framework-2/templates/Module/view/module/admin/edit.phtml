@@ -8,7 +8,7 @@ echo
 $form->prepare();
 $form->setAttribute(\'class\', \'form-horizontal\');
 
-$urlList = $this->url(\'zfcadmin/'.$ROUTENAME.'\');
+$urlList = $this->url(\'admin/'.$ROUTENAME.'\');
 ?>
 
 <h2>Create new record</h2>
@@ -27,8 +27,10 @@ $urlList = $this->url(\'zfcadmin/'.$ROUTENAME.'\');
 	<?php } ?>
 ';
 
-foreach ($FIELDS as $f)
+foreach ($FIELDS as $f) {
+	if ($f == 'id') continue;
 	echo "\t<?= \$this->formRowCustom(\$form->get('$f')); ?>\n\n";
+}
 
 echo
 '	<div class="control-group">
